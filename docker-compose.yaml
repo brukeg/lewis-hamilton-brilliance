@@ -1,0 +1,68 @@
+version: '3.9'
+
+services:
+  kestra:
+    build: ./docker/kestra
+    container_name: kestra
+    restart: always
+    ports:
+      - "8080:8080"
+    volumes:
+      - ~/.config/gcloud:/root/.config/gcloud  # Mount GCP credentials
+      - ./docker/kestra/application.yml:/app/config/application.yml  # Custom config
+    environment:
+      GOOGLE_APPLICATION_CREDENTIALS: /root/.config/gcloud/application_default_credentials.json
+
+  spark:
+    build: ./docker/spark
+    container_name: spark
+    environment:
+      SPARK_MODE: master
+    ports:
+      - "7077:7077"
+      - "8081:8081"
+
+  spark-worker:
+    build: ./docker/spark
+    container_name: spark-worker
+    environment:
+      SPARK_MODE: worker
+      SPARK_MASTER_URL: spark://spark:7077
+    depends_on:
+      - spark
+
+  dbt:
+    build: ./docker/dbt
+    container_name: dbt
+    volumes:
+      - ./dbt:/app/dbt
+    environment:
+      DBT_PROFILES_DIR: /app/dbt
+    depends_on:
+      - spark
+
+  terraform:
+    build: ./docker/terraform
+    container_name: terraform
+    volumes:
+      - ./terraform:/terraform
+    working_dir: /terraform
+    entrypoint: ["terraform"]
+
+  gcloud:
+    image: google/cloud-sdk:latest
+    container_name: gcloud
+    volumes:
+      - ~/.config/gcloud:/root/.config/gcloud
+      - ./scripts:/scripts
+    entrypoint: ["/bin/sh", "-c", "while true; do sleep 30; done"]
+
+  looker:
+    image: looker/looker
+    container_name: looker
+    ports:
+      - "9999:9999"
+    environment:
+      LOOKER_PORT: 9999
+    depends_on:
+      - dbt
