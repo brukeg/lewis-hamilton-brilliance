@@ -1,2 +1,2 @@
 FROM kestra/kestra:latest
-COPY application.yml /app/config/
+COPY application.yaml /app/config/
