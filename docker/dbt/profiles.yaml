@@ -1,9 +1,0 @@
-default:
-  outputs:
-    dev:
-      type: bigquery
-      method: service-account
-      project: compact-arc-447521-f9
-      dataset: dbt_staging
-      keyfile: /secrets/creds.json
-  target: dev

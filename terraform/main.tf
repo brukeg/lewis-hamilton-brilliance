@@ -72,6 +72,6 @@ resource "google_project_iam_member" "spark_bq_access" {
 
 resource "google_project_iam_member" "looker_bq_access" {
   project = var.gcp_project
-  role    = "roles/bigquery.viewer"
+  role    = "roles/bigquery.user"
   member  = "serviceAccount:${var.looker_service_account}"
 }

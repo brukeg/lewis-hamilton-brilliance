@@ -99,7 +99,7 @@ services:
     environment:
       GOOGLE_APPLICATION_CREDENTIALS: /secrets/creds.json
     working_dir: /terraform
-    entrypoint: ["terraform"]
+    entrypoint: ["/bin/sh", "-c", "tail -f /dev/null"]
     networks:
       - lewis-hamilton
 

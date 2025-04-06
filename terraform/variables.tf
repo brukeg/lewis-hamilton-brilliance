@@ -19,19 +19,23 @@ variable "gcp_region" {
 variable "kestra_service_account" {
   description = "Service account email for Kestra"
   type        = string
+  default     = "terraform-runner@compact-arc-447521-f9.iam.gserviceaccount.com"
 }
 
 variable "dbt_service_account" {
   description = "Service account email for dbt"
   type        = string
+  default     = "terraform-runner@compact-arc-447521-f9.iam.gserviceaccount.com"
 }
 
 variable "spark_service_account" {
   description = "Service account email for Spark"
   type        = string
+  default     = "terraform-runner@compact-arc-447521-f9.iam.gserviceaccount.com"
 }
 
 variable "looker_service_account" {
   description = "Service account email for Looker"
   type        = string
+  default     = "terraform-runner@compact-arc-447521-f9.iam.gserviceaccount.com"
 }
