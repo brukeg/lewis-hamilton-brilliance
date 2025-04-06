@@ -3,7 +3,7 @@ Data Engineering Zoomcamp Capstone Project: The Brilliance of Lewis Hamilton in 
 
 
 ## project structure
-
+```
 lewis-hamilton-career-brilliance/
 │── .gitignore
 │── README.md
@@ -67,3 +67,4 @@ lewis-hamilton-career-brilliance/
 ├── notebooks/                  # Jupyter notebooks for exploratory data analysis (time permitting, not yet)
 ├── logs/                       # Log storage for debugging (would be excluded from version control) (time permitting, not yet)
 └── tests/                      # Testing frameworks for ETL and dbt models (time permitting, not yet)
+```
