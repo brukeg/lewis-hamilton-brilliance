@@ -1,6 +1,6 @@
 variable "credentials" {
   description = "My Credentials"
-  default     = "~/.google/credentials/google_credentials.json"
+  default     = "~/.google/credentials/terraform_credentials.json"
   type        = string
 }
 

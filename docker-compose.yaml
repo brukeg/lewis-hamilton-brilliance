@@ -8,72 +8,116 @@ services:
     ports:
       - "8080:8080"
     volumes:
-      - ~/.config/gcloud:/root/.config/gcloud  # Mount GCP credentials
-      - ./docker/kestra/application.yml:/app/config/application.yml  # Custom config
+      - ~/.google/credentials/terraform_credentials.json:/secrets/creds.json  # Mount GCP credentials
+      - ./docker/kestra/application.yaml:/app/config/application.yaml  # Custom config
     environment:
-      GOOGLE_APPLICATION_CREDENTIALS: /root/.config/gcloud/application_default_credentials.json
+      GOOGLE_APPLICATION_CREDENTIALS: /secrets/creds.json
+    networks:
+      - lewis-hamilton
 
   spark:
     build: ./docker/spark
     container_name: spark
+    volumes:
+      - ~/.google/credentials/terraform_credentials.json:/secrets/creds.json
     environment:
       SPARK_MODE: master
+      GOOGLE_APPLICATION_CREDENTIALS: /secrets/creds.json
     ports:
       - "7077:7077"
       - "8081:8081"
+    networks:
+      - lewis-hamilton
 
   spark-worker-1:
     build: ./docker/spark
     container_name: spark-worker-1
+    volumes:
+      - ~/.google/credentials/terraform_credentials.json:/secrets/creds.json
     environment:
       SPARK_MODE: worker
       SPARK_MASTER_URL: spark://spark:7077
+      GOOGLE_APPLICATION_CREDENTIALS: /secrets/creds.json
+      LD_PRELOAD: ""
     depends_on:
       - spark
+    networks:
+      - lewis-hamilton
 
   spark-worker-2:
     build: ./docker/spark
     container_name: spark-worker-2
+    volumes:
+      - ~/.google/credentials/terraform_credentials.json:/secrets/creds.json
     environment:
       SPARK_MODE: worker
       SPARK_MASTER_URL: spark://spark:7077
+      GOOGLE_APPLICATION_CREDENTIALS: /secrets/creds.json
+      LD_PRELOAD: ""
     depends_on:
       - spark
+    networks:
+      - lewis-hamilton
 
   spark-worker-3:
     build: ./docker/spark
     container_name: spark-worker-3
+    volumes:
+      - ~/.google/credentials/terraform_credentials.json:/secrets/creds.json
     environment:
       SPARK_MODE: worker
       SPARK_MASTER_URL: spark://spark:7077
+      GOOGLE_APPLICATION_CREDENTIALS: /secrets/creds.json
+      LD_PRELOAD: ""
     depends_on:
       - spark
+    networks:
+      - lewis-hamilton
 
   dbt:
     build: ./docker/dbt
     container_name: dbt
     volumes:
       - ./dbt:/app/dbt
+      - ~/.google/credentials/terraform_credentials.json:/secrets/creds.json
     environment:
       DBT_PROFILES_DIR: /app/dbt
+      GOOGLE_APPLICATION_CREDENTIALS: /secrets/creds.json
+    entrypoint: ["/bin/sh", "-c", "tail -f /dev/null"]
+    working_dir: /app/dbt
     depends_on:
       - spark
+    networks:
+      - lewis-hamilton
 
   terraform:
     build: ./docker/terraform
     container_name: terraform
     volumes:
       - ./terraform:/terraform
+      - ~/.google/credentials/terraform_credentials.json:/secrets/creds.json
+    environment:
+      GOOGLE_APPLICATION_CREDENTIALS: /secrets/creds.json
     working_dir: /terraform
     entrypoint: ["terraform"]
+    networks:
+      - lewis-hamilton
 
   gcloud:
     image: google/cloud-sdk:slim
     container_name: gcloud
     volumes:
-      - ~/.config/gcloud:/root/.config/gcloud
       - ./scripts:/scripts
-    entrypoint: ["/bin/sh", "-c", "while true; do sleep 30; done"]
+      - ~/.google/credentials/terraform_credentials.json:/secrets/creds.json
+    environment:
+      GOOGLE_APPLICATION_CREDENTIALS: /secrets/creds.json
+    entrypoint: ["/bin/sh", "-c", "gcloud auth activate-service-account --key-file=/secrets/creds.json && while true; do sleep 30; done"]
+    networks:
+      - lewis-hamilton
+
+networks:
+  lewis-hamilton:
+    driver: bridge
 
   # looker:
   #   image: looker/looker
