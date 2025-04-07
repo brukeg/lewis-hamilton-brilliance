@@ -8,10 +8,10 @@ services:
     ports:
       - "8080:8080"
     volumes:
-      - ~/.google/credentials/terraform_credentials.json:/secrets/creds.json  # Mount GCP credentials
+      - ${GOOGLE_CREDENTIALS_HOST}:${GOOGLE_APPLICATION_CREDENTIALS}  # Mount GCP credentials
       - ./docker/kestra/application.yaml:/app/config/application.yaml  # Custom config
     environment:
-      GOOGLE_APPLICATION_CREDENTIALS: /secrets/creds.json
+      GOOGLE_APPLICATION_CREDENTIALS: ${GOOGLE_APPLICATION_CREDENTIALS}
     networks:
       - lewis-hamilton
 
@@ -19,10 +19,10 @@ services:
     build: ./docker/spark
     container_name: spark
     volumes:
-      - ~/.google/credentials/terraform_credentials.json:/secrets/creds.json
+      - ${GOOGLE_CREDENTIALS_HOST}:${GOOGLE_APPLICATION_CREDENTIALS}
     environment:
       SPARK_MODE: master
-      GOOGLE_APPLICATION_CREDENTIALS: /secrets/creds.json
+      GOOGLE_APPLICATION_CREDENTIALS: ${GOOGLE_APPLICATION_CREDENTIALS}
     ports:
       - "7077:7077"
       - "8081:8081"
@@ -33,11 +33,11 @@ services:
     build: ./docker/spark
     container_name: spark-worker-1
     volumes:
-      - ~/.google/credentials/terraform_credentials.json:/secrets/creds.json
+      - ${GOOGLE_CREDENTIALS_HOST}:${GOOGLE_APPLICATION_CREDENTIALS}
     environment:
       SPARK_MODE: worker
       SPARK_MASTER_URL: spark://spark:7077
-      GOOGLE_APPLICATION_CREDENTIALS: /secrets/creds.json
+      GOOGLE_APPLICATION_CREDENTIALS: ${GOOGLE_APPLICATION_CREDENTIALS}
       LD_PRELOAD: ""
     depends_on:
       - spark
@@ -48,11 +48,11 @@ services:
     build: ./docker/spark
     container_name: spark-worker-2
     volumes:
-      - ~/.google/credentials/terraform_credentials.json:/secrets/creds.json
+      - ${GOOGLE_CREDENTIALS_HOST}:${GOOGLE_APPLICATION_CREDENTIALS}
     environment:
       SPARK_MODE: worker
       SPARK_MASTER_URL: spark://spark:7077
-      GOOGLE_APPLICATION_CREDENTIALS: /secrets/creds.json
+      GOOGLE_APPLICATION_CREDENTIALS: ${GOOGLE_APPLICATION_CREDENTIALS}
       LD_PRELOAD: ""
     depends_on:
       - spark
@@ -63,11 +63,11 @@ services:
     build: ./docker/spark
     container_name: spark-worker-3
     volumes:
-      - ~/.google/credentials/terraform_credentials.json:/secrets/creds.json
+      - ${GOOGLE_CREDENTIALS_HOST}:${GOOGLE_APPLICATION_CREDENTIALS}
     environment:
       SPARK_MODE: worker
       SPARK_MASTER_URL: spark://spark:7077
-      GOOGLE_APPLICATION_CREDENTIALS: /secrets/creds.json
+      GOOGLE_APPLICATION_CREDENTIALS: ${GOOGLE_APPLICATION_CREDENTIALS}
       LD_PRELOAD: ""
     depends_on:
       - spark
@@ -79,10 +79,10 @@ services:
     container_name: dbt
     volumes:
       - ./dbt:/app/dbt
-      - ~/.google/credentials/terraform_credentials.json:/secrets/creds.json
+      - ${GOOGLE_CREDENTIALS_HOST}:${GOOGLE_APPLICATION_CREDENTIALS}
     environment:
       DBT_PROFILES_DIR: /app/dbt
-      GOOGLE_APPLICATION_CREDENTIALS: /secrets/creds.json
+      GOOGLE_APPLICATION_CREDENTIALS: ${GOOGLE_APPLICATION_CREDENTIALS}
     entrypoint: ["/bin/sh", "-c", "tail -f /dev/null"]
     working_dir: /app/dbt
     depends_on:
@@ -95,9 +95,9 @@ services:
     container_name: terraform
     volumes:
       - ./terraform:/terraform
-      - ~/.google/credentials/terraform_credentials.json:/secrets/creds.json
+      - ${GOOGLE_CREDENTIALS_HOST}:${GOOGLE_APPLICATION_CREDENTIALS}
     environment:
-      GOOGLE_APPLICATION_CREDENTIALS: /secrets/creds.json
+      GOOGLE_APPLICATION_CREDENTIALS: ${GOOGLE_APPLICATION_CREDENTIALS}
     working_dir: /terraform
     entrypoint: ["/bin/sh", "-c", "tail -f /dev/null"]
     networks:
@@ -108,23 +108,32 @@ services:
     container_name: gcloud
     volumes:
       - ./scripts:/scripts
-      - ~/.google/credentials/terraform_credentials.json:/secrets/creds.json
+      - ${GOOGLE_CREDENTIALS_HOST}:${GOOGLE_APPLICATION_CREDENTIALS}
     environment:
-      GOOGLE_APPLICATION_CREDENTIALS: /secrets/creds.json
-    entrypoint: ["/bin/sh", "-c", "gcloud auth activate-service-account --key-file=/secrets/creds.json && while true; do sleep 30; done"]
+      GOOGLE_APPLICATION_CREDENTIALS: ${GOOGLE_APPLICATION_CREDENTIALS}
+    entrypoint: ["/bin/sh", "-c", "gcloud auth activate-service-account --key-file=${GOOGLE_APPLICATION_CREDENTIALS} && while true; do sleep 30; done"]
+    networks:
+      - lewis-hamilton
+
+  ingestion:
+    build:
+      context: .
+      dockerfile: docker/ingestion/Dockerfile
+    container_name: ingestion
+    volumes:
+      - ./ingestion:/app/ingestion
+      - ./data/raw:/app/data/raw
+      - ${GOOGLE_CREDENTIALS_HOST}:${GOOGLE_APPLICATION_CREDENTIALS}
+    environment:
+      GOOGLE_APPLICATION_CREDENTIALS: ${GOOGLE_APPLICATION_CREDENTIALS}
+      F1DB_RELEASE_URL: ${F1DB_RELEASE_URL}
+      RAW_DATA_DIR: ${RAW_DATA_DIR}
+      GCS_BUCKET: ${GCS_BUCKET}
+      GCS_PREFIX: ${GCS_PREFIX}
+    entrypoint: ["/bin/sh", "-c", "tail -f /dev/null"]
     networks:
       - lewis-hamilton
 
 networks:
   lewis-hamilton:
     driver: bridge
-
-  # looker:
-  #   image: looker/looker
-  #   container_name: looker
-  #   ports:
-  #     - "9999:9999"
-  #   environment:
-  #     LOOKER_PORT: 9999
-  #   depends_on:
-  #     - dbt
