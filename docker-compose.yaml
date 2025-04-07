@@ -137,13 +137,3 @@ services:
 networks:
   lewis-hamilton:
     driver: bridge
-
-  # looker:
-  #   image: looker/looker
-  #   container_name: looker
-  #   ports:
-  #     - "9999:9999"
-  #   environment:
-  #     LOOKER_PORT: 9999
-  #   depends_on:
-  #     - dbt

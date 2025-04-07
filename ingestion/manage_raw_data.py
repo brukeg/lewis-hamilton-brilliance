@@ -117,9 +117,6 @@ def manage_ingestion(url: str, local_raw_dir: str, bucket_name: str, gcs_raw_pre
         destination = os.path.join(temp_move_dir, item)
         shutil.move(source, destination)
 
-    # Now clean out raw dir before finalizing move
-    clear_directory(local_raw_dir)
-
     for item in os.listdir(temp_move_dir):
         shutil.move(os.path.join(temp_move_dir, item), os.path.join(local_raw_dir, item))
 
@@ -128,6 +125,10 @@ def manage_ingestion(url: str, local_raw_dir: str, bucket_name: str, gcs_raw_pre
 
     upload_directory(bucket_name, local_raw_dir, gcs_raw_prefix)
     logging.info("Uploaded new raw data to GCS.")
+
+    # Final cleanup
+    for directory in [download_dir, extract_dir, temp_move_dir]:
+        shutil.rmtree(directory, ignore_errors=True)
 
 def main() -> None:
     args = parse_args()
