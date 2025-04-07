@@ -1,8 +1,9 @@
 # lewis-hamilton-brilliance
 Data Engineering Zoomcamp Capstone Project: The Brilliance of Lewis Hamilton in data
 
+# Problem
 
-## project structure
+# project structure
 ```
 lewis-hamilton-career-brilliance/
 │── .gitignore
@@ -68,3 +69,23 @@ lewis-hamilton-career-brilliance/
 ├── logs/                       # Log storage for debugging (would be excluded from version control) (time permitting, not yet)
 └── tests/                      # Testing frameworks for ETL and dbt models (time permitting, not yet)
 ```
+
+# Ingestion
+
+The ingestion pipeline is responsible for downloading, extracting, and uploading F1DB CSV data to Google Cloud Storage (GCS). It also manages the local storage of raw data by retaining only the latest release to conserve disk space and control GCS costs.
+
+## Overview
+
+1. **Download and Extract Data:**  
+   - The `ingestion/extract_data.py` script downloads the ZIP file from the F1DB release URL and saves it to a local directory.
+   - It then extracts the ZIP file, placing the CSV files in the designated raw data directory (e.g., `data/raw/`).
+
+2. **Version Management and Data Refresh:**  
+   - The `ingestion/manage_raw_data.py` script orchestrates the ingestion process.
+   - It parses the release version from the ZIP file URL (using a CalVer scheme like `2025.3.0`).
+   - The script compares the new version with a locally stored version (kept in a `version.txt` file within the raw data directory).
+   - If the new version is detected, the script clears the local raw data directory, updates it with the new data, and uploads the latest data to GCS under a specified prefix (e.g., `raw/latest/`).
+
+3. **Uploading Data to GCS:**  
+   - The `ingestion/upload_to_gcs.py` script handles recursively uploading the contents of the local raw data directory to a GCS bucket.
+   - This ensures that only the latest data is persisted in the cloud.
