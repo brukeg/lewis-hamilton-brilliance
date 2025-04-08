@@ -1,0 +1,468 @@
+version: 2
+
+sources:
+  - name: raw
+    schema: raw
+    project: compact-arc-447521-f9
+    tables:
+      - name: chassis
+        description: "Raw table created from f1db-chassis.csv"
+      - name: circuits
+        description: "Raw table created from f1db-circuits.csv"
+      - name: constructors_chronology
+        description: "Raw table created from f1db-constructors-chronology.csv"
+      - name: constructors
+        description: "Raw table created from f1db-constructors.csv"
+      - name: continents
+        description: "Raw table created from f1db-continents.csv"
+      - name: countries
+        description: "Raw table created from f1db-countries.csv"
+      - name: drivers_family_relationships
+        description: "Raw table created from f1db-drivers-family-relationships.csv"
+      - name: drivers
+        description: "Raw table created from f1db-drivers.csv"
+      - name: engine_manufacturers
+        description: "Raw table created from f1db-engine-manufacturers.csv"
+      - name: engines
+        description: "Raw table created from f1db-engines.csv"
+      - name: entrants
+        description: "Raw table created from f1db-entrants.csv"
+      - name: grands_prix
+        description: "Raw table created from f1db-grands-prix.csv"
+      - name: races_constructor_standings
+        description: "Raw table created from f1db-races-constructor-standings.csv"
+      - name: races_driver_of_the_day_results
+        description: "Raw table created from f1db-races-driver-of-the-day-results.csv"
+      - name: races_driver_standings
+        description: "Raw table created from f1db-races-driver-standings.csv"
+      - name: races_fastest_laps
+        description: "Raw table created from f1db-races-fastest-laps.csv"
+      - name: races_free_practice_1_results
+        description: "Raw table created from f1db-races-free-practice-1-results.csv"
+      - name: races_free_practice_2_results
+        description: "Raw table created from f1db-races-free-practice-2-results.csv"
+      - name: races_free_practice_3_results
+        description: "Raw table created from f1db-races-free-practice-3-results.csv"
+      - name: races_free_practice_4_results
+        description: "Raw table created from f1db-races-free-practice-4-results.csv"
+      - name: races_pit_stops
+        description: "Raw table created from f1db-races-pit-stops.csv"
+      - name: races_pre_qualifying_results
+        description: "Raw table created from f1db-races-pre-qualifying-results.csv"
+      - name: races_qualifying_1_results
+        description: "Raw table created from f1db-races-qualifying-1-results.csv"
+      - name: races_qualifying_2_results
+        description: "Raw table created from f1db-races-qualifying-2-results.csv"
+      - name: races_qualifying_results
+        description: "Raw table created from f1db-races-qualifying-results.csv"
+      - name: races_race_results
+        description: "Raw table created from f1db-races-race-results.csv"
+      - name: races_sprint_qualifying_results
+        description: "Raw table created from f1db-races-sprint-qualifying-results.csv"
+      - name: races_sprint_race_results
+        description: "Raw table created from f1db-races-sprint-race-results.csv"
+      - name: races_sprint_starting_grid_positions
+        description: "Raw table created from f1db-races-sprint-starting-grid-positions.csv"
+      - name: races_starting_grid_positions
+        description: "Raw table created from f1db-races-starting-grid-positions.csv"
+      - name: races_warming_up_results
+        description: "Raw table created from f1db-races-warming-up-results.csv"
+      - name: races
+        description: "Raw table created from f1db-races.csv"
+      - name: seasons_constructor_standings
+        description: "Raw table created from f1db-seasons-constructor-standings.csv"
+      - name: seasons_constructors
+        description: "Raw table created from f1db-seasons-constructors.csv"
+      - name: seasons_driver_standings
+        description: "Raw table created from f1db-seasons-driver-standings.csv"
+      - name: seasons_drivers
+        description: "Raw table created from f1db-seasons-drivers.csv"
+      - name: seasons_engine_manufacturers
+        description: "Raw table created from f1db-seasons-engine-manufacturers.csv"
+      - name: seasons_entrants_chassis
+        description: "Raw table created from f1db-seasons-entrants-chassis.csv"
+      - name: seasons_entrants_constructors
+        description: "Raw table created from f1db-seasons-entrants-constructors.csv"
+      - name: seasons_entrants_drivers
+        description: "Raw table created from f1db-seasons-entrants-drivers.csv"
+      - name: seasons_entrants_engines
+        description: "Raw table created from f1db-seasons-entrants-engines.csv"
+      - name: seasons_entrants_tyre_manufacturers
+        description: "Raw table created from f1db-seasons-entrants-tyre-manufacturers.csv"
+      - name: seasons_entrants
+        description: "Raw table created from f1db-seasons-entrants.csv"
+      - name: seasons_tyre_manufacturers
+        description: "Raw table created from f1db-seasons-tyre-manufacturers.csv"
+      - name: seasons
+        description: "Raw table created from f1db-seasons.csv"
+      - name: tyre_manufacturers
+        description: "Raw table created from f1db-tyre-manufacturers.csv"
+
+models:
+  - name: chassis
+    description: "External table created from f1db-chassis.csv"
+    config:
+      materialized: external
+      external:
+        location: "gs://compact-arc-447521-f9-data-lake/raw/latest/f1db-chassis.csv"
+        format: csv
+
+  - name: circuits
+    description: "External table created from f1db-circuits.csv"
+    config:
+      materialized: external
+      external:
+        location: "gs://compact-arc-447521-f9-data-lake/raw/latest/f1db-circuits.csv"
+        format: csv
+
+  - name: constructors_chronology
+    description: "External table created from f1db-constructors-chronology.csv"
+    config:
+      materialized: external
+      external:
+        location: "gs://compact-arc-447521-f9-data-lake/raw/latest/f1db-constructors-chronology.csv"
+        format: csv
+
+  - name: constructors
+    description: "External table created from f1db-constructors.csv"
+    config:
+      materialized: external
+      external:
+        location: "gs://compact-arc-447521-f9-data-lake/raw/latest/f1db-constructors.csv"
+        format: csv
+
+  - name: continents
+    description: "External table created from f1db-continents.csv"
+    config:
+      materialized: external
+      external:
+        location: "gs://compact-arc-447521-f9-data-lake/raw/latest/f1db-continents.csv"
+        format: csv
+
+  - name: countries
+    description: "External table created from f1db-countries.csv"
+    config:
+      materialized: external
+      external:
+        location: "gs://compact-arc-447521-f9-data-lake/raw/latest/f1db-countries.csv"
+        format: csv
+
+  - name: drivers_family_relationships
+    description: "External table created from f1db-drivers-family-relationships.csv"
+    config:
+      materialized: external
+      external:
+        location: "gs://compact-arc-447521-f9-data-lake/raw/latest/f1db-drivers-family-relationships.csv"
+        format: csv
+
+  - name: drivers
+    description: "External table created from f1db-drivers.csv"
+    config:
+      materialized: external
+      external:
+        location: "gs://compact-arc-447521-f9-data-lake/raw/latest/f1db-drivers.csv"
+        format: csv
+
+  - name: engine_manufacturers
+    description: "External table created from f1db-engine-manufacturers.csv"
+    config:
+      materialized: external
+      external:
+        location: "gs://compact-arc-447521-f9-data-lake/raw/latest/f1db-engine-manufacturers.csv"
+        format: csv
+
+  - name: engines
+    description: "External table created from f1db-engines.csv"
+    config:
+      materialized: external
+      external:
+        location: "gs://compact-arc-447521-f9-data-lake/raw/latest/f1db-engines.csv"
+        format: csv
+
+  - name: entrants
+    description: "External table created from f1db-entrants.csv"
+    config:
+      materialized: external
+      external:
+        location: "gs://compact-arc-447521-f9-data-lake/raw/latest/f1db-entrants.csv"
+        format: csv
+
+  - name: grands_prix
+    description: "External table created from f1db-grands-prix.csv"
+    config:
+      materialized: external
+      external:
+        location: "gs://compact-arc-447521-f9-data-lake/raw/latest/f1db-grands-prix.csv"
+        format: csv
+
+  - name: races_constructor_standings
+    description: "External table created from f1db-races-constructor-standings.csv"
+    config:
+      materialized: external
+      external:
+        location: "gs://compact-arc-447521-f9-data-lake/raw/latest/f1db-races-constructor-standings.csv"
+        format: csv
+
+  - name: races_driver_of_the_day_results
+    description: "External table created from f1db-races-driver-of-the-day-results.csv"
+    config:
+      materialized: external
+      external:
+        location: "gs://compact-arc-447521-f9-data-lake/raw/latest/f1db-races-driver-of-the-day-results.csv"
+        format: csv
+
+  - name: races_driver_standings
+    description: "External table created from f1db-races-driver-standings.csv"
+    config:
+      materialized: external
+      external:
+        location: "gs://compact-arc-447521-f9-data-lake/raw/latest/f1db-races-driver-standings.csv"
+        format: csv
+
+  - name: races_fastest_laps
+    description: "External table created from f1db-races-fastest-laps.csv"
+    config:
+      materialized: external
+      external:
+        location: "gs://compact-arc-447521-f9-data-lake/raw/latest/f1db-races-fastest-laps.csv"
+        format: csv
+
+  - name: races_free_practice_1_results
+    description: "External table created from f1db-races-free-practice-1-results.csv"
+    config:
+      materialized: external
+      external:
+        location: "gs://compact-arc-447521-f9-data-lake/raw/latest/f1db-races-free-practice-1-results.csv"
+        format: csv
+
+  - name: races_free_practice_2_results
+    description: "External table created from f1db-races-free-practice-2-results.csv"
+    config:
+      materialized: external
+      external:
+        location: "gs://compact-arc-447521-f9-data-lake/raw/latest/f1db-races-free-practice-2-results.csv"
+        format: csv
+
+  - name: races_free_practice_3_results
+    description: "External table created from f1db-races-free-practice-3-results.csv"
+    config:
+      materialized: external
+      external:
+        location: "gs://compact-arc-447521-f9-data-lake/raw/latest/f1db-races-free-practice-3-results.csv"
+        format: csv
+
+  - name: races_free_practice_4_results
+    description: "External table created from f1db-races-free-practice-4-results.csv"
+    config:
+      materialized: external
+      external:
+        location: "gs://compact-arc-447521-f9-data-lake/raw/latest/f1db-races-free-practice-4-results.csv"
+        format: csv
+
+  - name: races_pit_stops
+    description: "External table created from f1db-races-pit-stops.csv"
+    config:
+      materialized: external
+      external:
+        location: "gs://compact-arc-447521-f9-data-lake/raw/latest/f1db-races-pit-stops.csv"
+        format: csv
+
+  - name: races_pre_qualifying_results
+    description: "External table created from f1db-races-pre-qualifying-results.csv"
+    config:
+      materialized: external
+      external:
+        location: "gs://compact-arc-447521-f9-data-lake/raw/latest/f1db-races-pre-qualifying-results.csv"
+        format: csv
+
+  - name: races_qualifying_1_results
+    description: "External table created from f1db-races-qualifying-1-results.csv"
+    config:
+      materialized: external
+      external:
+        location: "gs://compact-arc-447521-f9-data-lake/raw/latest/f1db-races-qualifying-1-results.csv"
+        format: csv
+
+  - name: races_qualifying_2_results
+    description: "External table created from f1db-races-qualifying-2-results.csv"
+    config:
+      materialized: external
+      external:
+        location: "gs://compact-arc-447521-f9-data-lake/raw/latest/f1db-races-qualifying-2-results.csv"
+        format: csv
+
+  - name: races_qualifying_results
+    description: "External table created from f1db-races-qualifying-results.csv"
+    config:
+      materialized: external
+      external:
+        location: "gs://compact-arc-447521-f9-data-lake/raw/latest/f1db-races-qualifying-results.csv"
+        format: csv
+
+  - name: races_race_results
+    description: "External table created from f1db-races-race-results.csv"
+    config:
+      materialized: external
+      external:
+        location: "gs://compact-arc-447521-f9-data-lake/raw/latest/f1db-races-race-results.csv"
+        format: csv
+
+  - name: races_sprint_qualifying_results
+    description: "External table created from f1db-races-sprint-qualifying-results.csv"
+    config:
+      materialized: external
+      external:
+        location: "gs://compact-arc-447521-f9-data-lake/raw/latest/f1db-races-sprint-qualifying-results.csv"
+        format: csv
+
+  - name: races_sprint_race_results
+    description: "External table created from f1db-races-sprint-race-results.csv"
+    config:
+      materialized: external
+      external:
+        location: "gs://compact-arc-447521-f9-data-lake/raw/latest/f1db-races-sprint-race-results.csv"
+        format: csv
+
+  - name: races_sprint_starting_grid_positions
+    description: "External table created from f1db-races-sprint-starting-grid-positions.csv"
+    config:
+      materialized: external
+      external:
+        location: "gs://compact-arc-447521-f9-data-lake/raw/latest/f1db-races-sprint-starting-grid-positions.csv"
+        format: csv
+
+  - name: races_starting_grid_positions
+    description: "External table created from f1db-races-starting-grid-positions.csv"
+    config:
+      materialized: external
+      external:
+        location: "gs://compact-arc-447521-f9-data-lake/raw/latest/f1db-races-starting-grid-positions.csv"
+        format: csv
+
+  - name: races_warming_up_results
+    description: "External table created from f1db-races-warming-up-results.csv"
+    config:
+      materialized: external
+      external:
+        location: "gs://compact-arc-447521-f9-data-lake/raw/latest/f1db-races-warming-up-results.csv"
+        format: csv
+
+  - name: races
+    description: "External table created from f1db-races.csv"
+    config:
+      materialized: external
+      external:
+        location: "gs://compact-arc-447521-f9-data-lake/raw/latest/f1db-races.csv"
+        format: csv
+
+  - name: seasons_constructor_standings
+    description: "External table created from f1db-seasons-constructor-standings.csv"
+    config:
+      materialized: external
+      external:
+        location: "gs://compact-arc-447521-f9-data-lake/raw/latest/f1db-seasons-constructor-standings.csv"
+        format: csv
+
+  - name: seasons_constructors
+    description: "External table created from f1db-seasons-constructors.csv"
+    config:
+      materialized: external
+      external:
+        location: "gs://compact-arc-447521-f9-data-lake/raw/latest/f1db-seasons-constructors.csv"
+        format: csv
+
+  - name: seasons_driver_standings
+    description: "External table created from f1db-seasons-driver-standings.csv"
+    config:
+      materialized: external
+      external:
+        location: "gs://compact-arc-447521-f9-data-lake/raw/latest/f1db-seasons-driver-standings.csv"
+        format: csv
+
+  - name: seasons_drivers
+    description: "External table created from f1db-seasons-drivers.csv"
+    config:
+      materialized: external
+      external:
+        location: "gs://compact-arc-447521-f9-data-lake/raw/latest/f1db-seasons-drivers.csv"
+        format: csv
+
+  - name: seasons_engine_manufacturers
+    description: "External table created from f1db-seasons-engine-manufacturers.csv"
+    config:
+      materialized: external
+      external:
+        location: "gs://compact-arc-447521-f9-data-lake/raw/latest/f1db-seasons-engine-manufacturers.csv"
+        format: csv
+
+  - name: seasons_entrants_chassis
+    description: "External table created from f1db-seasons-entrants-chassis.csv"
+    config:
+      materialized: external
+      external:
+        location: "gs://compact-arc-447521-f9-data-lake/raw/latest/f1db-seasons-entrants-chassis.csv"
+        format: csv
+
+  - name: seasons_entrants_constructors
+    description: "External table created from f1db-seasons-entrants-constructors.csv"
+    config:
+      materialized: external
+      external:
+        location: "gs://compact-arc-447521-f9-data-lake/raw/latest/f1db-seasons-entrants-constructors.csv"
+        format: csv
+
+  - name: seasons_entrants_drivers
+    description: "External table created from f1db-seasons-entrants-drivers.csv"
+    config:
+      materialized: external
+      external:
+        location: "gs://compact-arc-447521-f9-data-lake/raw/latest/f1db-seasons-entrants-drivers.csv"
+        format: csv
+
+  - name: seasons_entrants_engines
+    description: "External table created from f1db-seasons-entrants-engines.csv"
+    config:
+      materialized: external
+      external:
+        location: "gs://compact-arc-447521-f9-data-lake/raw/latest/f1db-seasons-entrants-engines.csv"
+        format: csv
+
+  - name: seasons_entrants_tyre_manufacturers
+    description: "External table created from f1db-seasons-entrants-tyre-manufacturers.csv"
+    config:
+      materialized: external
+      external:
+        location: "gs://compact-arc-447521-f9-data-lake/raw/latest/f1db-seasons-entrants-tyre-manufacturers.csv"
+        format: csv
+
+  - name: seasons_entrants
+    description: "External table created from f1db-seasons-entrants.csv"
+    config:
+      materialized: external
+      external:
+        location: "gs://compact-arc-447521-f9-data-lake/raw/latest/f1db-seasons-entrants.csv"
+        format: csv
+
+  - name: seasons_tyre_manufacturers
+    description: "External table created from f1db-seasons-tyre-manufacturers.csv"
+    config:
+      materialized: external
+      external:
+        location: "gs://compact-arc-447521-f9-data-lake/raw/latest/f1db-seasons-tyre-manufacturers.csv"
+        format: csv
+
+  - name: seasons
+    description: "External table created from f1db-seasons.csv"
+    config:
+      materialized: external
+      external:
+        location: "gs://compact-arc-447521-f9-data-lake/raw/latest/f1db-seasons.csv"
+        format: csv
+
+  - name: tyre_manufacturers
+    description: "External table created from f1db-tyre-manufacturers.csv"
+    config:
+      materialized: external
+      external:
+        location: "gs://compact-arc-447521-f9-data-lake/raw/latest/f1db-tyre-manufacturers.csv"
+        format: csv
