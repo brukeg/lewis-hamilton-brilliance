@@ -1,1 +1,1 @@
-SELECT 44 AS hamilton;
+SELECT 44 AS hamilton
