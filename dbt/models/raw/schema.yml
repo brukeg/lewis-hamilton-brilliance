@@ -6,97 +6,492 @@ sources:
     project: compact-arc-447521-f9
     tables:
       - name: chassis
-        description: "Raw table created from f1db-chassis.csv"
+        description: "Raw table created from f1db-chassis.csv. The list of chassis, each representing a specific race car chassis design."
+        columns:
+          - name: id
+            description: "The unique identifier of the chassis."
+            tests:
+              - not_null
+              - unique
+          - name: constructorId
+            description: "The identifier of the constructor associated with the chassis."
+          - name: name
+            description: "The name of the chassis."
+          - name: fullName
+            description: "The full name of the chassis."
       - name: circuits
-        description: "Raw table created from f1db-circuits.csv"
+        description: "Raw table created from f1db-circuits.csv. The list of circuits, each representing a specific racing track, including geographical location and race history."
+        columns:
+          - name: id
+            description: "The unique identifier of the circuit."
+            tests:
+              - not_null
+              - unique
+          - name: name
+            description: "The name of the circuit, typically used for display purposes."
+          - name: fullName
+            description: "The full official name of the circuit."
+          - name: previousNames
+            description: "The previous names used for the circuit."
+          - name: type
+            description: "The type of the circuit."
+          - name: direction
+            description: "The direction of the circuit."
+          - name: placeName
+            description: "The place name where the circuit is located."
+          - name: countryId
+            description: "The identifier of the country where the circuit is located."
+          - name: latitude
+            description: "The latitude coordinate where the circuit is located."
+          - name: longitude
+            description: "The longitude coordinate where the circuit is located."
+          - name: length
+            description: "The length of the circuit in kilometers."
+          - name: turns
+            description: "The number of turns (corners) in the circuit."
+          - name: totalRacesHeld
+            description: "The total number of races held at the circuit."
       - name: constructors_chronology
-        description: "Raw table created from f1db-constructors-chronology.csv"
+        description: "Raw table created from f1db-constructors-chronology.csv."
       - name: constructors
-        description: "Raw table created from f1db-constructors.csv"
+        description: "Raw table created from f1db-constructors.csv. The list of constructors, each representing the teams or manufacturers responsible for designing and producing race cars, including statistics."
+        columns:
+          - name: id
+            description: "The unique identifier of the constructor."
+            tests:
+              - not_null
+              - unique
+          - name: name
+            description: "The name of the constructor, typically used for display purposes."
+          - name: fullName
+            description: "The full name of the constructor."
+          - name: countryId
+            description: "The identifier of the country of origin of the constructor."
+          - name: chronology
+            description: "The chronology of the constructor."
+          - name: bestChampionshipPosition
+            description: "The best finishing position achieved by the constructor in a World Constructors' Championship."
+          - name: bestStartingGridPosition
+            description: "The best starting grid position achieved by the constructor in a race."
+          - name: bestRaceResult
+            description: "The best finishing position achieved by the constructor in a race."
+          - name: totalChampionshipWins
+            description: "The total number of World Constructors' Championship titles won by the constructor."
+          - name: totalRaceEntries
+            description: "The total number of races entered by the constructor."
+          - name: totalRaceStarts
+            description: "The total number of races started by the constructor."
+          - name: totalRaceWins
+            description: "The total number of races won by the constructor."
+          - name: total1And2Finishes
+            description: "The total number of races in which the constructor finished in both 1st and 2nd place."
+          - name: totalRaceLaps
+            description: "The total number of laps completed by the constructor."
+          - name: totalPodiums
+            description: "The total number of podium finishes achieved by the constructor."
+          - name: totalPodiumRaces
+            description: "The total number of races in which the constructor finished on the podium."
+          - name: totalPoints
+            description: "The total number of points accumulated by the constructor."
+          - name: totalChampionshipPoints
+            description: "The total number of World Constructors' Championship points accumulated by the constructor."
+          - name: totalPolePositions
+            description: "The total number of pole positions achieved by the constructor."
+          - name: totalFastestLaps
+            description: "The total number of fastest laps set by the constructor."
       - name: continents
-        description: "Raw table created from f1db-continents.csv"
+        description: "Raw table created from f1db-continents.csv. The list of continents, each representing geographical regions associated with countries."
       - name: countries
-        description: "Raw table created from f1db-countries.csv"
+        description: "Raw table created from f1db-countries.csv. The list of countries, each representing a nation associated with drivers, constructors, etc."
       - name: drivers_family_relationships
-        description: "Raw table created from f1db-drivers-family-relationships.csv"
+        description: "Raw table created from f1db-drivers-family-relationships.csv."
+        columns:
+          - name: positionDisplayOrder
+            description: "The display order of the family relationship relative to other relationships of the parent driver."
+          - name: driverId
+            description: "The identifier of the related driver."
+          - name: type
+            description: "The type of the family relationship."
       - name: drivers
-        description: "Raw table created from f1db-drivers.csv"
+        description: "Raw table created from f1db-drivers.csv. The list of drivers, each representing the drivers who participated in races, including biographical details and statistics."
+        columns:
+          - name: id
+            description: "The unique identifier of the driver."
+            tests:
+              - not_null
+              - unique
+          - name: name
+            description: "The full name of the driver (display name)."
+          - name: firstName
+            description: "The driver's first name."
+          - name: lastName
+            description: "The driver's last name."
+          - name: fullName
+            description: "The driver's full name."
+          - name: abbreviation
+            description: "The three-letter abbreviation for the driver."
+          - name: permanentNumber
+            description: "The permanent racing number chosen by the driver."
+          - name: gender
+            description: "The driver's gender."
+          - name: dateOfBirth
+            description: "The driver's birth date."
+          - name: dateOfDeath
+            description: "The driver's death date, if applicable."
+          - name: placeOfBirth
+            description: "The place where the driver was born."
+          - name: countryOfBirthCountryId
+            description: "The identifier of the country where the driver was born."
+          - name: nationalityCountryId
+            description: "The driver's nationality country identifier."
+          - name: secondNationalityCountryId
+            description: "The driver's second nationality, if applicable."
+          - name: familyRelationships
+            description: "Family relationships involving the driver."
+          - name: bestChampionshipPosition
+            description: "The best finishing position achieved in the World Drivers' Championship."
+          - name: bestStartingGridPosition
+            description: "The driver's best starting grid position."
+          - name: bestRaceResult
+            description: "The driver's best race finishing position."
+          - name: totalChampionshipWins
+            description: "The total number of championship wins by the driver."
+          - name: totalRaceEntries
+            description: "The total number of races entered by the driver."
+          - name: totalRaceStarts
+            description: "The total number of races started by the driver."
+          - name: totalRaceWins
+            description: "The total number of races won by the driver."
+          - name: totalRaceLaps
+            description: "The total number of laps completed by the driver."
+          - name: totalPodiums
+            description: "The total number of podium finishes by the driver."
+          - name: totalPoints
+            description: "The total number of points accumulated by the driver."
+          - name: totalChampionshipPoints
+            description: "The total championship points accumulated by the driver."
+          - name: totalPolePositions
+            description: "The total number of pole positions achieved by the driver."
+          - name: totalFastestLaps
+            description: "The total number of fastest laps set by the driver."
+          - name: totalDriverOfTheDay
+            description: "The total number of Driver of the Day awards."
+          - name: totalGrandSlams
+            description: "The total number of Grand Slams achieved by the driver."
       - name: engine_manufacturers
-        description: "Raw table created from f1db-engine-manufacturers.csv"
+        description: "Raw table created from f1db-engine-manufacturers.csv. The list of engine manufacturers, each representing the entities producing engines, including statistics."
+        columns:
+          - name: id
+            description: "The unique identifier of the engine manufacturer."
+            tests:
+              - not_null
+              - unique
+          - name: name
+            description: "The name of the engine manufacturer."
+          - name: countryId
+            description: "The identifier of the country of origin of the engine manufacturer."
+          - name: bestChampionshipPosition
+            description: "The best championship finishing position in a World Constructors' Championship."
+          - name: bestStartingGridPosition
+            description: "The best starting grid position achieved by the engine manufacturer."
+          - name: bestRaceResult
+            description: "The best race finishing position achieved by the engine manufacturer."
+          - name: totalChampionshipWins
+            description: "The total number of championship wins by the engine manufacturer."
+          - name: totalRaceEntries
+            description: "The total number of races entered by the engine manufacturer."
+          - name: totalRaceStarts
+            description: "The total number of races started by the engine manufacturer."
+          - name: totalRaceWins
+            description: "The total number of races won by the engine manufacturer."
+          - name: totalRaceLaps
+            description: "The total number of laps completed by the engine manufacturer."
+          - name: totalPodiums
+            description: "The total number of podium finishes by the engine manufacturer."
+          - name: totalPodiumRaces
+            description: "The total number of races where the engine manufacturer finished on the podium."
+          - name: totalPoints
+            description: "The total number of points accumulated by the engine manufacturer."
+          - name: totalChampionshipPoints
+            description: "The total championship points accumulated by the engine manufacturer."
+          - name: totalPolePositions
+            description: "The total number of pole positions achieved by the engine manufacturer."
+          - name: totalFastestLaps
+            description: "The total number of fastest laps set by the engine manufacturer."
       - name: engines
-        description: "Raw table created from f1db-engines.csv"
+        description: "Raw table created from f1db-engines.csv. The list of engines used in race cars, including configuration, performance data, and manufacturer information."
+        columns:
+          - name: id
+            description: "The unique identifier of the engine."
+            tests:
+              - not_null
+              - unique
+          - name: engineManufacturerId
+            description: "The identifier of the engine manufacturer associated with the engine."
+          - name: name
+            description: "The name of the engine."
+          - name: fullName
+            description: "The full name of the engine."
+          - name: capacity
+            description: "The capacity of the engine in liters."
+          - name: configuration
+            description: "The configuration of the engine (e.g., V6, V8)."
+          - name: aspiration
+            description: "The aspiration type of the engine (e.g., naturally aspirated, turbocharged)."
       - name: entrants
-        description: "Raw table created from f1db-entrants.csv"
+        description: "Raw table created from f1db-entrants.csv. The list of entrants, each representing a team or individual participating in races."
+        columns:
+          - name: id
+            description: "The unique identifier of the entrant."
+            tests:
+              - not_null
+              - unique
+          - name: name
+            description: "The name of the entrant."
       - name: grands_prix
-        description: "Raw table created from f1db-grands-prix.csv"
+        description: "Raw table created from f1db-grands-prix.csv. The list of Grands Prix, each representing a racing event including details such as name, abbreviation, and location."
+        columns:
+          - name: id
+            description: "The unique identifier of the Grand Prix."
+            tests:
+              - not_null
+              - unique
+          - name: name
+            description: "The display name of the Grand Prix."
+          - name: fullName
+            description: "The full official name of the Grand Prix."
+          - name: shortName
+            description: "The short name of the Grand Prix."
+          - name: abbreviation
+            description: "The three-character abbreviation of the Grand Prix."
+          - name: countryId
+            description: "The identifier of the country where the Grand Prix is held."
+          - name: totalRacesHeld
+            description: "The total number of races held for this Grand Prix."
       - name: races_constructor_standings
-        description: "Raw table created from f1db-races-constructor-standings.csv"
+        description: "Raw table created from f1db-races-constructor-standings.csv."
       - name: races_driver_of_the_day_results
-        description: "Raw table created from f1db-races-driver-of-the-day-results.csv"
+        description: "Raw table created from f1db-races-driver-of-the-day-results.csv."
       - name: races_driver_standings
-        description: "Raw table created from f1db-races-driver-standings.csv"
+        description: "Raw table created from f1db-races-driver-standings.csv."
       - name: races_fastest_laps
-        description: "Raw table created from f1db-races-fastest-laps.csv"
+        description: "Raw table created from f1db-races-fastest-laps.csv."
       - name: races_free_practice_1_results
-        description: "Raw table created from f1db-races-free-practice-1-results.csv"
+        description: "Raw table created from f1db-races-free-practice-1-results.csv."
       - name: races_free_practice_2_results
-        description: "Raw table created from f1db-races-free-practice-2-results.csv"
+        description: "Raw table created from f1db-races-free-practice-2-results.csv."
       - name: races_free_practice_3_results
-        description: "Raw table created from f1db-races-free-practice-3-results.csv"
+        description: "Raw table created from f1db-races-free-practice-3-results.csv."
       - name: races_free_practice_4_results
-        description: "Raw table created from f1db-races-free-practice-4-results.csv"
+        description: "Raw table created from f1db-races-free-practice-4-results.csv."
       - name: races_pit_stops
-        description: "Raw table created from f1db-races-pit-stops.csv"
+        description: "Raw table created from f1db-races-pit-stops.csv."
       - name: races_pre_qualifying_results
-        description: "Raw table created from f1db-races-pre-qualifying-results.csv"
+        description: "Raw table created from f1db-races-pre-qualifying-results.csv."
       - name: races_qualifying_1_results
-        description: "Raw table created from f1db-races-qualifying-1-results.csv"
+        description: "Raw table created from f1db-races-qualifying-1-results.csv."
       - name: races_qualifying_2_results
-        description: "Raw table created from f1db-races-qualifying-2-results.csv"
+        description: "Raw table created from f1db-races-qualifying-2-results.csv."
       - name: races_qualifying_results
-        description: "Raw table created from f1db-races-qualifying-results.csv"
+        description: "Raw table created from f1db-races-qualifying-results.csv."
       - name: races_race_results
-        description: "Raw table created from f1db-races-race-results.csv"
-      - name: races_sprint_qualifying_results
-        description: "Raw table created from f1db-races-sprint-qualifying-results.csv"
-      - name: races_sprint_race_results
-        description: "Raw table created from f1db-races-sprint-race-results.csv"
-      - name: races_sprint_starting_grid_positions
-        description: "Raw table created from f1db-races-sprint-starting-grid-positions.csv"
-      - name: races_starting_grid_positions
-        description: "Raw table created from f1db-races-starting-grid-positions.csv"
-      - name: races_warming_up_results
-        description: "Raw table created from f1db-races-warming-up-results.csv"
+        description: "Raw table created from f1db-races-race-results.csv."
       - name: races
-        description: "Raw table created from f1db-races.csv"
+        description: "Raw table created from f1db-races.csv. The list of races, each representing detailed information about individual races."
+        columns:
+          - name: id
+            description: "The unique identifier of the race."
+            tests:
+              - not_null
+              - unique
+          - name: year
+            description: "The year of the season in which the race took place."
+          - name: round
+            description: "The round number of the race in the season."
+          - name: date
+            description: "The date of the race in UTC."
+          - name: time
+            description: "The start time of the race in UTC."
+          - name: grandPrixId
+            description: "The identifier of the Grand Prix associated with the race."
+          - name: officialName
+            description: "The official name of the race."
+          - name: qualifyingFormat
+            description: "The qualifying format of the race."
+          - name: sprintQualifyingFormat
+            description: "The sprint qualifying format of the race."
+          - name: circuitId
+            description: "The identifier of the circuit where the race took place."
+          - name: circuitType
+            description: "The type of the circuit."
+          - name: direction
+            description: "The direction of the circuit."
+          - name: courseLength
+            description: "The length of the circuit in kilometers."
+          - name: turns
+            description: "The number of turns (corners) in the circuit."
+          - name: laps
+            description: "The total number of laps of the race."
+          - name: distance
+            description: "The total distance of the race in kilometers."
+          - name: scheduledLaps
+            description: "The scheduled number of laps for the race."
+          - name: scheduledDistance
+            description: "The scheduled distance of the race in kilometers."
+          - name: driversChampionshipDecider
+            description: "Indicates if the race was the decider for the World Drivers' Championship."
+          - name: constructorsChampionshipDecider
+            description: "Indicates if the race was the decider for the World Constructors' Championship."
+          - name: preQualifyingDate
+            description: "The date of the pre-qualifying session in UTC."
+          - name: preQualifyingTime
+            description: "The start time of the pre-qualifying session in UTC."
+          - name: preQualifyingResults
+            description: "The results of the pre-qualifying session."
+          - name: freePractice1Date
+            description: "The date of the first free practice session in UTC."
+          - name: freePractice1Time
+            description: "The start time of the first free practice session in UTC."
+          - name: freePractice1Results
+            description: "The results of the first free practice session."
+          - name: freePractice2Date
+            description: "The date of the second free practice session in UTC."
+          - name: freePractice2Time
+            description: "The start time of the second free practice session in UTC."
+          - name: freePractice2Results
+            description: "The results of the second free practice session."
+          - name: freePractice3Date
+            description: "The date of the third free practice session in UTC."
+          - name: freePractice3Time
+            description: "The start time of the third free practice session in UTC."
+          - name: freePractice3Results
+            description: "The results of the third free practice session."
+          - name: freePractice4Date
+            description: "The date of the fourth free practice session in UTC."
+          - name: freePractice4Time
+            description: "The start time of the fourth free practice session in UTC."
+          - name: freePractice4Results
+            description: "The results of the fourth free practice session."
+          - name: qualifying1Date
+            description: "The date of the first qualifying session in UTC."
+          - name: qualifying1Time
+            description: "The start time of the first qualifying session in UTC."
+          - name: qualifying1Results
+            description: "The results of the first qualifying session."
+          - name: qualifying2Date
+            description: "The date of the second qualifying session in UTC."
+          - name: qualifying2Time
+            description: "The start time of the second qualifying session in UTC."
+          - name: qualifying2Results
+            description: "The results of the second qualifying session."
+          - name: qualifyingDate
+            description: "The date of the main qualifying session in UTC."
+          - name: qualifyingTime
+            description: "The start time of the main qualifying session in UTC."
+          - name: qualifyingResults
+            description: "The results of the main qualifying session."
+          - name: sprintQualifyingDate
+            description: "The date of the sprint qualifying session in UTC."
+          - name: sprintQualifyingTime
+            description: "The start time of the sprint qualifying session in UTC."
+          - name: sprintQualifyingResults
+            description: "The results of the sprint qualifying session."
+          - name: sprintStartingGridPositions
+            description: "The starting grid positions for the sprint race."
+          - name: sprintRaceDate
+            description: "The date of the sprint race in UTC."
+          - name: sprintRaceTime
+            description: "The start time of the sprint race in UTC."
+          - name: sprintRaceResults
+            description: "The results of the sprint race."
+          - name: warmingUpDate
+            description: "The date of the warming-up session in UTC."
+          - name: warmingUpTime
+            description: "The start time of the warming-up session in UTC."
+          - name: warmingUpResults
+            description: "The results of the warming-up session."
+          - name: startingGridPositions
+            description: "The starting grid positions for the race."
+          - name: raceResults
+            description: "The results of the race."
+          - name: fastestLaps
+            description: "The fastest laps recorded during the race."
+          - name: pitStops
+            description: "The pit stops made during the race."
+          - name: driverOfTheDayResults
+            description: "The results of the Driver of the Day vote."
+          - name: driverStandings
+            description: "The driver standings after the race."
+          - name: constructorStandings
+            description: "The constructor standings after the race."
+      - name: races_sprint_qualifying_results
+        description: "Raw table created from f1db-races-sprint-qualifying-results.csv."
+      - name: races_sprint_race_results
+        description: "Raw table created from f1db-races-sprint-race-results.csv."
+      - name: races_sprint_starting_grid_positions
+        description: "Raw table created from f1db-races-sprint-starting-grid-positions.csv."
+      - name: races_starting_grid_positions
+        description: "Raw table created from f1db-races-starting-grid-positions.csv."
+      - name: races_warming_up_results
+        description: "Raw table created from f1db-races-warming-up-results.csv."
       - name: seasons_constructor_standings
-        description: "Raw table created from f1db-seasons-constructor-standings.csv"
+        description: "Raw table created from f1db-seasons-constructor-standings.csv."
       - name: seasons_constructors
-        description: "Raw table created from f1db-seasons-constructors.csv"
+        description: "Raw table created from f1db-seasons-constructors.csv."
       - name: seasons_driver_standings
-        description: "Raw table created from f1db-seasons-driver-standings.csv"
+        description: "Raw table created from f1db-seasons-driver-standings.csv."
       - name: seasons_drivers
-        description: "Raw table created from f1db-seasons-drivers.csv"
+        description: "Raw table created from f1db-seasons-drivers.csv."
       - name: seasons_engine_manufacturers
-        description: "Raw table created from f1db-seasons-engine-manufacturers.csv"
+        description: "Raw table created from f1db-seasons-engine-manufacturers.csv."
       - name: seasons_entrants_chassis
-        description: "Raw table created from f1db-seasons-entrants-chassis.csv"
+        description: "Raw table created from f1db-seasons-entrants-chassis.csv."
       - name: seasons_entrants_constructors
-        description: "Raw table created from f1db-seasons-entrants-constructors.csv"
+        description: "Raw table created from f1db-seasons-entrants-constructors.csv."
       - name: seasons_entrants_drivers
-        description: "Raw table created from f1db-seasons-entrants-drivers.csv"
+        description: "Raw table created from f1db-seasons-entrants-drivers.csv."
       - name: seasons_entrants_engines
-        description: "Raw table created from f1db-seasons-entrants-engines.csv"
+        description: "Raw table created from f1db-seasons-entrants-engines.csv."
       - name: seasons_entrants_tyre_manufacturers
-        description: "Raw table created from f1db-seasons-entrants-tyre-manufacturers.csv"
+        description: "Raw table created from f1db-seasons-entrants-tyre-manufacturers.csv."
       - name: seasons_entrants
-        description: "Raw table created from f1db-seasons-entrants.csv"
+        description: "Raw table created from f1db-seasons-entrants.csv."
       - name: seasons_tyre_manufacturers
-        description: "Raw table created from f1db-seasons-tyre-manufacturers.csv"
+        description: "Raw table created from f1db-seasons-tyre-manufacturers.csv."
       - name: seasons
-        description: "Raw table created from f1db-seasons.csv"
+        description: "Raw table created from f1db-seasons.csv."
       - name: tyre_manufacturers
-        description: "Raw table created from f1db-tyre-manufacturers.csv"
+        description: "Raw table created from f1db-tyre-manufacturers.csv. The list of tyre manufacturers, each representing the companies that supply tyres, including statistics."
+        columns:
+          - name: id
+            description: "The unique identifier of the tyre manufacturer."
+            tests:
+              - not_null
+              - unique
+          - name: name
+            description: "The name of the tyre manufacturer."
+          - name: countryId
+            description: "The identifier of the country of origin of the tyre manufacturer."
+          - name: bestStartingGridPosition
+            description: "The best starting grid position achieved by the tyre manufacturer in a race."
+          - name: bestRaceResult
+            description: "The best finishing position achieved by the tyre manufacturer in a race."
+          - name: totalRaceEntries
+            description: "The total number of races entered by the tyre manufacturer."
+          - name: totalRaceStarts
+            description: "The total number of races started by the tyre manufacturer."
+          - name: totalRaceWins
+            description: "The total number of races won by the tyre manufacturer."
+          - name: totalRaceLaps
+            description: "The total number of laps completed by the tyre manufacturer."
+          - name: totalPodiums
+            description: "The total number of podium finishes achieved by the tyre manufacturer."
+          - name: totalPodiumRaces
+            description: "The total number of races in which the tyre manufacturer finished on the podium."
+          - name: totalPolePositions
+            description: "The total number of pole positions achieved by the tyre manufacturer."
+          - name: totalFastestLaps
+            description: "The total number of fastest laps set by the tyre manufacturer."
 
 models:
   - name: chassis
@@ -115,7 +510,7 @@ models:
         location: "gs://compact-arc-447521-f9-data-lake/raw/latest/f1db-circuits.csv"
         format: csv
 
-  - name: constructors_chronology
+  - name: constructors-chronology
     description: "External table created from f1db-constructors-chronology.csv"
     config:
       materialized: external
@@ -147,7 +542,7 @@ models:
         location: "gs://compact-arc-447521-f9-data-lake/raw/latest/f1db-countries.csv"
         format: csv
 
-  - name: drivers_family_relationships
+  - name: drivers-family-relationships
     description: "External table created from f1db-drivers-family-relationships.csv"
     config:
       materialized: external
@@ -163,7 +558,7 @@ models:
         location: "gs://compact-arc-447521-f9-data-lake/raw/latest/f1db-drivers.csv"
         format: csv
 
-  - name: engine_manufacturers
+  - name: engine-manufacturers
     description: "External table created from f1db-engine-manufacturers.csv"
     config:
       materialized: external
@@ -187,7 +582,7 @@ models:
         location: "gs://compact-arc-447521-f9-data-lake/raw/latest/f1db-entrants.csv"
         format: csv
 
-  - name: grands_prix
+  - name: grands-prix
     description: "External table created from f1db-grands-prix.csv"
     config:
       materialized: external
@@ -195,7 +590,7 @@ models:
         location: "gs://compact-arc-447521-f9-data-lake/raw/latest/f1db-grands-prix.csv"
         format: csv
 
-  - name: races_constructor_standings
+  - name: races-constructor-standings
     description: "External table created from f1db-races-constructor-standings.csv"
     config:
       materialized: external
@@ -203,7 +598,7 @@ models:
         location: "gs://compact-arc-447521-f9-data-lake/raw/latest/f1db-races-constructor-standings.csv"
         format: csv
 
-  - name: races_driver_of_the_day_results
+  - name: races-driver-of-the-day-results
     description: "External table created from f1db-races-driver-of-the-day-results.csv"
     config:
       materialized: external
@@ -211,7 +606,7 @@ models:
         location: "gs://compact-arc-447521-f9-data-lake/raw/latest/f1db-races-driver-of-the-day-results.csv"
         format: csv
 
-  - name: races_driver_standings
+  - name: races-driver-standings
     description: "External table created from f1db-races-driver-standings.csv"
     config:
       materialized: external
@@ -219,7 +614,7 @@ models:
         location: "gs://compact-arc-447521-f9-data-lake/raw/latest/f1db-races-driver-standings.csv"
         format: csv
 
-  - name: races_fastest_laps
+  - name: races-fastest-laps
     description: "External table created from f1db-races-fastest-laps.csv"
     config:
       materialized: external
@@ -227,7 +622,7 @@ models:
         location: "gs://compact-arc-447521-f9-data-lake/raw/latest/f1db-races-fastest-laps.csv"
         format: csv
 
-  - name: races_free_practice_1_results
+  - name: races-free-practice-1-results
     description: "External table created from f1db-races-free-practice-1-results.csv"
     config:
       materialized: external
@@ -235,7 +630,7 @@ models:
         location: "gs://compact-arc-447521-f9-data-lake/raw/latest/f1db-races-free-practice-1-results.csv"
         format: csv
 
-  - name: races_free_practice_2_results
+  - name: races-free-practice-2-results
     description: "External table created from f1db-races-free-practice-2-results.csv"
     config:
       materialized: external
@@ -243,7 +638,7 @@ models:
         location: "gs://compact-arc-447521-f9-data-lake/raw/latest/f1db-races-free-practice-2-results.csv"
         format: csv
 
-  - name: races_free_practice_3_results
+  - name: races-free-practice-3-results
     description: "External table created from f1db-races-free-practice-3-results.csv"
     config:
       materialized: external
@@ -251,7 +646,7 @@ models:
         location: "gs://compact-arc-447521-f9-data-lake/raw/latest/f1db-races-free-practice-3-results.csv"
         format: csv
 
-  - name: races_free_practice_4_results
+  - name: races-free-practice-4-results
     description: "External table created from f1db-races-free-practice-4-results.csv"
     config:
       materialized: external
@@ -259,7 +654,7 @@ models:
         location: "gs://compact-arc-447521-f9-data-lake/raw/latest/f1db-races-free-practice-4-results.csv"
         format: csv
 
-  - name: races_pit_stops
+  - name: races-pit-stops
     description: "External table created from f1db-races-pit-stops.csv"
     config:
       materialized: external
@@ -267,7 +662,7 @@ models:
         location: "gs://compact-arc-447521-f9-data-lake/raw/latest/f1db-races-pit-stops.csv"
         format: csv
 
-  - name: races_pre_qualifying_results
+  - name: races-pre-qualifying-results
     description: "External table created from f1db-races-pre-qualifying-results.csv"
     config:
       materialized: external
@@ -275,7 +670,7 @@ models:
         location: "gs://compact-arc-447521-f9-data-lake/raw/latest/f1db-races-pre-qualifying-results.csv"
         format: csv
 
-  - name: races_qualifying_1_results
+  - name: races-qualifying-1-results
     description: "External table created from f1db-races-qualifying-1-results.csv"
     config:
       materialized: external
@@ -283,7 +678,7 @@ models:
         location: "gs://compact-arc-447521-f9-data-lake/raw/latest/f1db-races-qualifying-1-results.csv"
         format: csv
 
-  - name: races_qualifying_2_results
+  - name: races-qualifying-2-results
     description: "External table created from f1db-races-qualifying-2-results.csv"
     config:
       materialized: external
@@ -291,7 +686,7 @@ models:
         location: "gs://compact-arc-447521-f9-data-lake/raw/latest/f1db-races-qualifying-2-results.csv"
         format: csv
 
-  - name: races_qualifying_results
+  - name: races-qualifying-results
     description: "External table created from f1db-races-qualifying-results.csv"
     config:
       materialized: external
@@ -299,7 +694,7 @@ models:
         location: "gs://compact-arc-447521-f9-data-lake/raw/latest/f1db-races-qualifying-results.csv"
         format: csv
 
-  - name: races_race_results
+  - name: races-race-results
     description: "External table created from f1db-races-race-results.csv"
     config:
       materialized: external
@@ -307,7 +702,7 @@ models:
         location: "gs://compact-arc-447521-f9-data-lake/raw/latest/f1db-races-race-results.csv"
         format: csv
 
-  - name: races_sprint_qualifying_results
+  - name: races-sprint-qualifying-results
     description: "External table created from f1db-races-sprint-qualifying-results.csv"
     config:
       materialized: external
@@ -315,7 +710,7 @@ models:
         location: "gs://compact-arc-447521-f9-data-lake/raw/latest/f1db-races-sprint-qualifying-results.csv"
         format: csv
 
-  - name: races_sprint_race_results
+  - name: races-sprint-race-results
     description: "External table created from f1db-races-sprint-race-results.csv"
     config:
       materialized: external
@@ -323,7 +718,7 @@ models:
         location: "gs://compact-arc-447521-f9-data-lake/raw/latest/f1db-races-sprint-race-results.csv"
         format: csv
 
-  - name: races_sprint_starting_grid_positions
+  - name: races-sprint-starting-grid-positions
     description: "External table created from f1db-races-sprint-starting-grid-positions.csv"
     config:
       materialized: external
@@ -331,7 +726,7 @@ models:
         location: "gs://compact-arc-447521-f9-data-lake/raw/latest/f1db-races-sprint-starting-grid-positions.csv"
         format: csv
 
-  - name: races_starting_grid_positions
+  - name: races-starting-grid-positions
     description: "External table created from f1db-races-starting-grid-positions.csv"
     config:
       materialized: external
@@ -339,7 +734,7 @@ models:
         location: "gs://compact-arc-447521-f9-data-lake/raw/latest/f1db-races-starting-grid-positions.csv"
         format: csv
 
-  - name: races_warming_up_results
+  - name: races-warming-up-results
     description: "External table created from f1db-races-warming-up-results.csv"
     config:
       materialized: external
@@ -355,7 +750,7 @@ models:
         location: "gs://compact-arc-447521-f9-data-lake/raw/latest/f1db-races.csv"
         format: csv
 
-  - name: seasons_constructor_standings
+  - name: seasons-constructor-standings
     description: "External table created from f1db-seasons-constructor-standings.csv"
     config:
       materialized: external
@@ -363,7 +758,7 @@ models:
         location: "gs://compact-arc-447521-f9-data-lake/raw/latest/f1db-seasons-constructor-standings.csv"
         format: csv
 
-  - name: seasons_constructors
+  - name: seasons-constructors
     description: "External table created from f1db-seasons-constructors.csv"
     config:
       materialized: external
@@ -371,7 +766,7 @@ models:
         location: "gs://compact-arc-447521-f9-data-lake/raw/latest/f1db-seasons-constructors.csv"
         format: csv
 
-  - name: seasons_driver_standings
+  - name: seasons-driver-standings
     description: "External table created from f1db-seasons-driver-standings.csv"
     config:
       materialized: external
@@ -379,7 +774,7 @@ models:
         location: "gs://compact-arc-447521-f9-data-lake/raw/latest/f1db-seasons-driver-standings.csv"
         format: csv
 
-  - name: seasons_drivers
+  - name: seasons-drivers
     description: "External table created from f1db-seasons-drivers.csv"
     config:
       materialized: external
@@ -387,7 +782,7 @@ models:
         location: "gs://compact-arc-447521-f9-data-lake/raw/latest/f1db-seasons-drivers.csv"
         format: csv
 
-  - name: seasons_engine_manufacturers
+  - name: seasons-engine-manufacturers
     description: "External table created from f1db-seasons-engine-manufacturers.csv"
     config:
       materialized: external
@@ -395,7 +790,7 @@ models:
         location: "gs://compact-arc-447521-f9-data-lake/raw/latest/f1db-seasons-engine-manufacturers.csv"
         format: csv
 
-  - name: seasons_entrants_chassis
+  - name: seasons-entrants-chassis
     description: "External table created from f1db-seasons-entrants-chassis.csv"
     config:
       materialized: external
@@ -403,7 +798,7 @@ models:
         location: "gs://compact-arc-447521-f9-data-lake/raw/latest/f1db-seasons-entrants-chassis.csv"
         format: csv
 
-  - name: seasons_entrants_constructors
+  - name: seasons-entrants-constructors
     description: "External table created from f1db-seasons-entrants-constructors.csv"
     config:
       materialized: external
@@ -411,7 +806,7 @@ models:
         location: "gs://compact-arc-447521-f9-data-lake/raw/latest/f1db-seasons-entrants-constructors.csv"
         format: csv
 
-  - name: seasons_entrants_drivers
+  - name: seasons-entrants-drivers
     description: "External table created from f1db-seasons-entrants-drivers.csv"
     config:
       materialized: external
@@ -419,7 +814,7 @@ models:
         location: "gs://compact-arc-447521-f9-data-lake/raw/latest/f1db-seasons-entrants-drivers.csv"
         format: csv
 
-  - name: seasons_entrants_engines
+  - name: seasons-entrants-engines
     description: "External table created from f1db-seasons-entrants-engines.csv"
     config:
       materialized: external
@@ -427,7 +822,7 @@ models:
         location: "gs://compact-arc-447521-f9-data-lake/raw/latest/f1db-seasons-entrants-engines.csv"
         format: csv
 
-  - name: seasons_entrants_tyre_manufacturers
+  - name: seasons-entrants-tyre-manufacturers
     description: "External table created from f1db-seasons-entrants-tyre-manufacturers.csv"
     config:
       materialized: external
@@ -435,7 +830,7 @@ models:
         location: "gs://compact-arc-447521-f9-data-lake/raw/latest/f1db-seasons-entrants-tyre-manufacturers.csv"
         format: csv
 
-  - name: seasons_entrants
+  - name: seasons-entrants
     description: "External table created from f1db-seasons-entrants.csv"
     config:
       materialized: external
@@ -443,7 +838,7 @@ models:
         location: "gs://compact-arc-447521-f9-data-lake/raw/latest/f1db-seasons-entrants.csv"
         format: csv
 
-  - name: seasons_tyre_manufacturers
+  - name: seasons-tyre-manufacturers
     description: "External table created from f1db-seasons-tyre-manufacturers.csv"
     config:
       materialized: external
@@ -459,7 +854,7 @@ models:
         location: "gs://compact-arc-447521-f9-data-lake/raw/latest/f1db-seasons.csv"
         format: csv
 
-  - name: tyre_manufacturers
+  - name: tyre-manufacturers
     description: "External table created from f1db-tyre-manufacturers.csv"
     config:
       materialized: external
