@@ -11,3 +11,13 @@ profile: default
 model-paths: ["models"]
 target-path: "target"
 clean-targets: ["target", "dbt_modules"]
+
+models:
+  lewis_hamilton_brilliance:
+    raw:
+      +schema: raw
+      materialized: {}
+    semi_processed:
+      +schema: semi_processed
+    final_transformed:
+      +schema: final_transformed

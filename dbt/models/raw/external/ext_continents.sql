@@ -5,9 +5,9 @@
          "format": "csv",
          "skip_leading_rows": 1,
          "schema": "
-            continent STRING,
+            id STRING,
             abbreviation STRING,
-            continent_noun STRING,
+            continentNoun STRING,
             continentAdjective STRING
          "
     }

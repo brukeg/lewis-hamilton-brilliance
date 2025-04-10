@@ -1,0 +1,5 @@
+version: 2
+
+models:
+  - name: driver_constructor_wins
+    description: "Race wins for each driver by constructor (team)"

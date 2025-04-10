@@ -1,0 +1,11 @@
+version: 2
+
+models:
+  - name: championship_point_gaps
+    description: "Points gap between first and second place in each seasons?"
+
+  - name: driver_unique_gp_wins
+    description: "Number of unique Grands Prix each driver has won"
+
+  - name: race_participation_counts
+    description: "Number of races each driver has competed in"

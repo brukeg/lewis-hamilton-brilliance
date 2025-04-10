@@ -5,12 +5,12 @@
          "format": "csv",
          "skip_leading_rows": 1,
          "schema": "
-            country STRING,
+            id STRING,
             abbreviationTwo STRING,
             abbreviationThree STRING,
             countryNoun STRING,
             countryAdjective STRING,
-            continent STRING
+            continentId STRING
          "
     }
 ) }}
