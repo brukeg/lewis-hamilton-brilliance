@@ -2,7 +2,7 @@ version: 2
 
 sources:
   - name: raw
-    schema: raw
+    schema: dbt_staging
     project: compact-arc-447521-f9
     tables:
       - name: chassis
@@ -294,7 +294,7 @@ sources:
         description: "Raw table created from f1db-races-qualifying-2-results.csv."
       - name: races_qualifying_results
         description: "Raw table created from f1db-races-qualifying-results.csv."
-      - name: races_race_results
+      - name: races-race-results
         description: "Raw table created from f1db-races-race-results.csv."
       - name: races
         description: "Raw table created from f1db-races.csv. The list of races, each representing detailed information about individual races."
@@ -438,7 +438,7 @@ sources:
         description: "Raw table created from f1db-seasons-constructor-standings.csv."
       - name: seasons_constructors
         description: "Raw table created from f1db-seasons-constructors.csv."
-      - name: seasons_driver_standings
+      - name: seasons-driver-standings
         description: "Raw table created from f1db-seasons-driver-standings.csv."
       - name: seasons_drivers
         description: "Raw table created from f1db-seasons-drivers.csv."
