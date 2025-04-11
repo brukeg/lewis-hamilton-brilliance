@@ -13,5 +13,16 @@ target-path: "target"
 clean-targets: ["target", "dbt_modules"]
 
 models:
-  lewis_hamilton_brilliance:  
-    +schema: "{{ target.schema }}"
+  lewis_hamilton_brilliance:
+
+    raw:
+      +enabled: "{{ target.name == 'dev' }}"
+      +schema: dbt_staging
+
+    semi_processed:
+      +enabled: "{{ target.name == 'semi' }}"
+      +schema: semi_processed
+
+    final_transformed:
+      +enabled: "{{ target.name == 'final' }}"
+      +schema: final_transformed

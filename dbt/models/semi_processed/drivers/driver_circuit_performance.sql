@@ -1,6 +1,4 @@
--- Question: In which circuits has he been most dominant?
--- Table: driver_circuit_performance.sql
--- Directory: models/semi_processed
+-- Question: Races won per circuit per driver
 
 {{ config(materialized='table') }}
 

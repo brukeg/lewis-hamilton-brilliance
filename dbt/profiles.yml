@@ -21,7 +21,7 @@ default:
       type: bigquery
       method: service-account
       project: compact-arc-447521-f9
-      dataset: semi_processed
+      dataset: final_transformed
       location: us-west1
       keyfile: /secrets/creds.json
   

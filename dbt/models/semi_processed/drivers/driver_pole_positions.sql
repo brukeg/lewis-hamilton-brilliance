@@ -1,6 +1,4 @@
--- Question: How often has he started from pole position?
--- Table: driver_pole_positions.sql
--- Directory: models/semi_processed
+-- Question: Pole position per driver
 
 {{ config(materialized='table') }}
 

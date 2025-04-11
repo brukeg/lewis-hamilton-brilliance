@@ -1,7 +1,3 @@
--- Question: Which major F1 records does he currently hold?
--- Table: driver_achievement_summary.sql
--- Directory: models/semi_processed
-
 {{ config(materialized='table') }}
 
 SELECT

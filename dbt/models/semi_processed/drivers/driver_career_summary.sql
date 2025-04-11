@@ -1,6 +1,4 @@
 -- Question: Who are the all-time greatest based on championships, race wins, and poles?
--- Table: driver_career_summary.sql
--- Directory: models/semi_processed
 
 {{ config(materialized='table') }}
 

@@ -1,7 +1,3 @@
--- Question: How many wins does he have for each manufacturer he's driven for?
--- Table: driver_constructor_wins.sql
--- Directory: models/semi_processed
-
 {{ config(materialized='table') }}
 
 SELECT

@@ -1,6 +1,4 @@
--- Question: In how many seasons did he win the championship?
--- Table: driver_championship_wins.sql
--- Directory: models/semi_processed
+-- Question: Championships won per driver?
 
 {{ config(materialized='table') }}
 

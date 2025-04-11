@@ -1,6 +1,4 @@
--- Question: How does his win rate compare to other drivers with 100+ races?
--- Table: driver_win_rates.sql
--- Directory: models/semi_processed
+-- Win rate for drivers who have competed in at least 100 races
 
 {{ config(materialized='table') }}
 
