@@ -2,4 +2,6 @@ version: 2
 
 models:
   - name: driver_constructor_wins
+    config:
+      schema: semi_processed
     description: "Race wins for each driver by constructor (team)"

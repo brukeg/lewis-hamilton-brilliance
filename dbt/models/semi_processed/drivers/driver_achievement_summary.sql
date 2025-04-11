@@ -10,6 +10,6 @@ SELECT
   COUNTIF(positionNumber = 1) AS total_wins,
   COUNTIF(gridPositionNumber = 1) AS total_poles,
   COUNTIF(positionNumber <= 3) AS total_podiums,
-  COUNTIF(fastestLap = 'TRUE') AS fastest_laps
-FROM {{ source('raw', 'races_race_results') }}
+  COUNTIF(fastestLap = TRUE) AS fastest_laps
+FROM {{ source('raw', 'races-race-results') }}
 GROUP BY driverId

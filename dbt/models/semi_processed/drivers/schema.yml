@@ -2,29 +2,47 @@ version: 2
 
 models:
   - name: driver_achievement_summary
+    config:
+      schema: semi_processed
     description: "Total number of races, wins, podiums, and pole positions"
 
   - name: driver_career_summary
+    config:
+      schema: semi_processed
     description: "All-time greatest based on championships, race wins, and poles?"
 
   - name: driver_championship_wins
+    config:
+      schema: semi_processed
     description: "Number of championships won by each driver"
 
   - name: driver_circuit_performance
+    config:
+      schema: semi_processed
     description: "Total number of wins by driver and circuit"
 
   - name: driver_front_row_starts
+    config:
+      schema: semi_processed
     description: "Total number of front row starts (positions 1 or 2) for each driver"
 
   - name: driver_pole_positions
+    config:
+      schema: semi_processed
     description: "Total number of pole positions achieved by each driver"
 
   - name: driver_win_rates
+    config:
+      schema: semi_processed
     description: "Win rate for drivers who have competed in at least 100 races"
 
   - name: driver_wins_by_country
+    config:
+      schema: semi_processed
     description: "Total wins per driver in each country"
 
   # - name: driver_fastest_lap_counts
+  #   config:
+  #     schema: semi_processed
   #   description: "Number of races where each driver set the fastest lap"
 

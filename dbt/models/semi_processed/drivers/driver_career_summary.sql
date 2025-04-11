@@ -8,7 +8,7 @@ WITH championships AS (
   SELECT
     driverId AS driver_id,
     COUNT(*) AS championships
-  FROM {{ source('raw', 'seasons_driver_standings') }}
+  FROM {{ source('raw', 'seasons-driver-standings') }}
   WHERE positionNumber = 1
   GROUP BY driver_id
 ),
@@ -16,7 +16,7 @@ wins AS (
   SELECT
     driverId AS driver_id,
     COUNT(*) AS race_wins
-  FROM {{ source('raw', 'races_race_results') }}
+  FROM {{ source('raw', 'races-race-results') }}
   WHERE positionNumber = 1
   GROUP BY driverId
 ),
@@ -24,7 +24,7 @@ poles AS (
   SELECT
     driverId AS driver_id,
     COUNT(*) AS pole_positions
-  FROM {{ source('raw', 'races_race_results') }}
+  FROM {{ source('raw', 'races-race-results') }}
   WHERE gridPositionNumber = 1
   GROUP BY driverId
 )

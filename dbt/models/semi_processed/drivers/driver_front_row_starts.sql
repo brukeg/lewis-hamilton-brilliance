@@ -7,6 +7,6 @@
 SELECT
   driverId,
   COUNT(*) AS front_row_starts
-FROM {{ source('raw', 'races_race_results') }}
+FROM {{ source('raw', 'races-race-results') }}
 WHERE gridPositionNumber <= 2
 GROUP BY driverId

@@ -4,7 +4,7 @@ default:
       type: bigquery
       method: service-account
       project: compact-arc-447521-f9
-      dataset: dbt_staging
+      dataset: semi_processed
       location: us-west1
       keyfile: /secrets/creds.json
   target: dev

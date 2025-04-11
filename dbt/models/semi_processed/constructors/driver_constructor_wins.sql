@@ -5,9 +5,9 @@
 {{ config(materialized='table') }}
 
 SELECT
-  driveId AS driver_id,
+  driverId AS driver_id,
   constructorId AS constructor_id,
   COUNT(*) AS win_count
-FROM {{ source('raw', 'races_race_results') }}
+FROM {{ source('raw', 'races-race-results') }}
 WHERE positionNumber = 1
 GROUP BY driverId, constructorId

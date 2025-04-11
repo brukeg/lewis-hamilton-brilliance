@@ -5,6 +5,6 @@
 SELECT
   driverId AS driver_id,
   COUNT(DISTINCT raceId) AS unique_gp_wins
-FROM {{ ref('races_race_results') }}
-WHERE position_order = 1
+FROM {{ source('raw', 'races-race-results') }}
+WHERE positionNumber = 1
 GROUP BY driver_id

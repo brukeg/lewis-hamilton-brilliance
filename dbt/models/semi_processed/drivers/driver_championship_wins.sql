@@ -5,8 +5,8 @@
 {{ config(materialized='table') }}
 
 SELECT
-  driver_id,
+  driverId AS driver_id,
   COUNT(*) AS championships_won
-FROM {{ source('raw', 'seasons_driver_standings') }}
+FROM {{ source('raw', 'races-race-results') }}
 WHERE positionNumber = 1
 GROUP BY driver_id

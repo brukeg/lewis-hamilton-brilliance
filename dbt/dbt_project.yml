@@ -2,10 +2,6 @@ name: lewis_hamilton_brilliance
 version: "1.0"
 config-version: 2
 
-dispatch:
-  - macro_namespace: dbt
-    search_order: [dbt_external_tables, dbt]
-
 profile: default
 
 model-paths: ["models"]
@@ -15,9 +11,16 @@ clean-targets: ["target", "dbt_modules"]
 models:
   lewis_hamilton_brilliance:
     raw:
-      +schema: raw
-      materialized: {}
+      +schema: dbt_staging
+
     semi_processed:
       +schema: semi_processed
+      constructors:
+        +schema: semi_processed
+      drivers:
+        +schema: semi_processed
+      races:
+        +schema: semi_processed
+
     final_transformed:
       +schema: final_transformed

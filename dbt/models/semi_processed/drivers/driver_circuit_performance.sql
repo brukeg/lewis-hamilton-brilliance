@@ -6,10 +6,10 @@
 
 SELECT
   driverId AS driver_id,
-  raceId AS circuit_id,
+  raceId AS circuit,
   COUNT(*) AS races,
   COUNTIF(positionNumber = 1) AS wins,
   COUNTIF(gridPositionNumber = 1) AS poles,
   COUNTIF(positionNumber <= 3) AS podiums
-FROM {{ source('raw', 'races_race_results') }}
-GROUP BY driverId, circuitId
+FROM {{ source('raw', 'races-race-results') }}
+GROUP BY driverId, raceId

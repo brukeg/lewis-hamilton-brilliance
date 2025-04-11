@@ -8,14 +8,14 @@ WITH race_counts AS (
   SELECT
     driverId AS driver_id,
     COUNT(DISTINCT raceId) AS race_count
-  FROM {{ source('raw', 'races_race_results') }}
+  FROM {{ source('raw', 'races-race-results') }}
   GROUP BY driverId
 ),
 win_counts AS (
   SELECT
     driverId AS driver_id,
     COUNT(*) AS win_count
-  FROM {{ source('raw', 'races_race_results') }}
+  FROM {{ source('raw', 'races-race-results') }}
   WHERE positionNumber = 1
   GROUP BY driver_id
 )

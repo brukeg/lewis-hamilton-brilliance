@@ -8,7 +8,7 @@ WITH ranked_standings AS (
     driverId AS driver_id,
     points,
     RANK() OVER (PARTITION BY year ORDER BY positionNumber) AS position_rank
-  FROM {{ ref('seasons_driver_standings') }}
+  FROM {{ source('raw','seasons-driver-standings') }}
 )
 SELECT
   s1.season,
