@@ -2,6 +2,30 @@
 Data Engineering Zoomcamp Capstone Project: The Brilliance of Lewis Hamilton in data
 
 # Problem
+#### The Brilliance of Lewis Hamilton
+Lewis Hamilton isn’t just a Formula 1 driver—he’s a once-in-a-generation athlete whose dominance has redefined greatness in the sport. With seven world championships, a record-breaking number of wins, poles, and podiums, his career is a data-rich case study in sustained excellence.
+
+But the narrative around "the greatest of all time" in F1 is often subjective—tied up in eras, team dynamics, or fan loyalty. This project sets out to explore that question through data. Using the open [F1DB dataset](https://github.com/f1db/f1db), we’ll build a cloud-based data pipeline that ingests, transforms, and visualizes Hamilton’s career in context with the rest of the grid—past and present.
+
+We’re not here just to admire the stats—we’re here to prove the brilliance with data. Some of the questions we’ll explore:
+
+1. How many races has Lewis Hamilton competed in—and how does his win rate compare to other drivers with long careers?
+
+1. How dominant has he been at certain circuits?
+
+1. How often has he started from pole or the front row?
+
+1. In how many seasons did he win the championship, and how large were the point gaps?
+
+1. How many unique Grands Prix has he won?
+
+1. How many wins did he earn for each manufacturer?
+
+1. Which countries or continents has he dominated most?
+
+1. Who are the all-time greats in terms of total wins, poles, and championships—and where does Lewis stand?
+
+We’ll be using GCP, Terraform, Kestra, BigQuery, dbt, and Looker to create a fully orchestrated pipeline that answers these questions at scale—and makes the case for Lewis Hamilton as the
 
 # project structure
 ```
