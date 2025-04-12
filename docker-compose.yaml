@@ -8,15 +8,45 @@ services:
     ports:
       - "8080:8080"
     volumes:
-      - ${GOOGLE_CREDENTIALS_HOST}:${GOOGLE_APPLICATION_CREDENTIALS}  # Mount GCP credentials
-      # - ./docker/kestra/application.yaml:/app/config/application.yaml  # Custom config
+      - ${GOOGLE_CREDENTIALS_HOST}:${GOOGLE_APPLICATION_CREDENTIALS}
       - ${PWD}/docker/kestra/application.yaml:/app/config/application.yaml
+      - ${PWD}/dags:/app/dags
     command: server standalone
     environment:
       GOOGLE_APPLICATION_CREDENTIALS: ${GOOGLE_APPLICATION_CREDENTIALS}
       KESTRA_CONFIGURATION_PATH: /app/config/application.yaml
     networks:
       - lewis-hamilton
+  kestra-cli:
+    image: kestra/kestra:latest
+    platform: linux/amd64
+    pull_policy: always
+    container_name: kestra-cli
+    entrypoint: ["/bin/sh", "-c"]
+    command: ["while true; do sleep 3600; done"]
+    volumes:
+      - ${PWD}/dags:/app/dags
+      - ${GOOGLE_CREDENTIALS_HOST}:${GOOGLE_APPLICATION_CREDENTIALS}
+    environment:
+      GOOGLE_APPLICATION_CREDENTIALS: ${GOOGLE_APPLICATION_CREDENTIALS}
+    networks:
+      - lewis-hamilton
+
+    #     kestra-cli:
+    # image: kestra/kestra:latest
+    # platform: linux/arm64
+    # pull_policy: always
+    # container_name: kestra-cli
+    # entrypoint: ["/app/kestra"]
+    # command: server standalone
+    # volumes:
+    #   - ${PWD}:/workspace
+    #   - ${GOOGLE_CREDENTIALS_HOST}:${GOOGLE_APPLICATION_CREDENTIALS}
+    # environment:
+    #   GOOGLE_APPLICATION_CREDENTIALS: ${GOOGLE_APPLICATION_CREDENTIALS}
+    # networks:
+    #   - lewis-hamilton
+
 
   spark:
     build: ./docker/spark

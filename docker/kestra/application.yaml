@@ -1,4 +1,10 @@
 kestra:
+  tutorialFlows:
+    enabled: false
+
+  configuration:
+    path: /app/config/application.yaml
+
   storage:
     type: gcs
     gcs: 
@@ -9,3 +15,7 @@ kestra:
 
   repository:
     type: memory
+
+  server:
+    flow:
+      path: /app/dags/workflows
