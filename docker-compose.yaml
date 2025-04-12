@@ -25,7 +25,8 @@ services:
     entrypoint: ["/bin/sh", "-c"]
     command: ["while true; do sleep 3600; done"]
     volumes:
-      - ${PWD}/dags:/app/dags
+      # - ${PWD}/dags:/app/dags
+      - .:/workspace
       - ${GOOGLE_CREDENTIALS_HOST}:${GOOGLE_APPLICATION_CREDENTIALS}
     environment:
       GOOGLE_APPLICATION_CREDENTIALS: ${GOOGLE_APPLICATION_CREDENTIALS}
