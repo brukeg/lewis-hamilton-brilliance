@@ -9,9 +9,12 @@ services:
       - "8080:8080"
     volumes:
       - ${GOOGLE_CREDENTIALS_HOST}:${GOOGLE_APPLICATION_CREDENTIALS}  # Mount GCP credentials
-      - ./docker/kestra/application.yaml:/app/config/application.yaml  # Custom config
+      # - ./docker/kestra/application.yaml:/app/config/application.yaml  # Custom config
+      - ${PWD}/docker/kestra/application.yaml:/app/config/application.yaml
+    command: server standalone
     environment:
       GOOGLE_APPLICATION_CREDENTIALS: ${GOOGLE_APPLICATION_CREDENTIALS}
+      KESTRA_CONFIGURATION_PATH: /app/config/application.yaml
     networks:
       - lewis-hamilton
 

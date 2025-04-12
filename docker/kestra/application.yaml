@@ -1,12 +1,11 @@
 kestra:
   storage:
-    type: google-cloud-storage
-    bucket: compact-arc-447521-f9-data-lake
+    type: gcs
+    gcs: 
+      bucket: compact-arc-447521-f9-data-lake
 
   queue:
-    type: memory  # No need for Postgres queue
+    type: memory
 
   repository:
-    type: bigquery
-    project: compact-arc-447521-f9
-    dataset: kestra_repository
+    type: memory

@@ -1,0 +1,73 @@
+from pathlib import Path
+
+# Recreate workflow file after kernel reset
+workflow_base = Path("dags/workflows")
+workflow_base.mkdir(parents=True, exist_ok=True)
+
+workflow_file = workflow_base / "orchestrate_all.yaml"
+
+workflow_file.write_text('''\
+id: lewis-hamilton-full-pipeline
+namespace: lewis_hamilton_brilliance
+
+tasks:
+  - id: check-version
+    type: io.kestra.core.tasks.scripts.Python
+    inputFiles:
+      version_txt: compact-arc-447521-f9-data-lake/raw/latest/version.txt
+    script: |
+      import os
+      from datetime import datetime
+      
+      new_version = "2025.4.0"  # Replace this with logic to fetch new version dynamically
+      version_path = "/workspace/version_txt"
+
+      if os.path.exists(version_path):
+          with open(version_path, 'r') as f:
+              existing_version = f.read().strip()
+      else:
+          existing_version = ""
+
+      if existing_version != new_version:
+          output = "NEW"
+      else:
+          output = "OLD"
+
+      with open("version_status.txt", "w") as out:
+          out.write(output)
+
+    outputFiles:
+      - version_status.txt
+
+  - id: decide-path
+    type: io.kestra.core.tasks.flows.Switch
+    value: "{{ outputs.check-version.outputFiles['version_status.txt'].content }}"
+    cases:
+      NEW:
+        - id: run-ingestion
+          type: io.kestra.core.tasks.scripts.Bash
+          script: |
+            python ingestion/manage_raw_data.py
+
+        - id: dbt-dev
+          type: io.kestra.core.tasks.scripts.Bash
+          script: |
+            dbt run --target dev
+
+        - id: dbt-semi
+          type: io.kestra.core.tasks.scripts.Bash
+          script: |
+            dbt run --target semi
+
+        - id: dbt-final
+          type: io.kestra.core.tasks.scripts.Bash
+          script: |
+            dbt run --target final
+
+      OLD:
+        - id: skip-transforms
+          type: io.kestra.core.tasks.log.Log
+          message: "No new data version. Skipping ingestion and dbt transforms."
+''')
+
+workflow_file.name
