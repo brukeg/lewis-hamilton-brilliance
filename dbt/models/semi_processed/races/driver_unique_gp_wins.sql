@@ -1,5 +1,3 @@
--- Question: How many races has each driver won at least once? (Unique GP victories)
-
 {{ config(materialized='table') }}
 
 SELECT

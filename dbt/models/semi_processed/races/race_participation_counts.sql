@@ -1,5 +1,3 @@
--- Question: How many races has each driver competed in?
-
 {{ config(materialized='table') }}
 
 SELECT

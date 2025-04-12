@@ -1,5 +1,3 @@
--- Question: What is the point gap between first and second place in each?
-
 {{ config(materialized='table') }}
 
 WITH ranked_standings AS (

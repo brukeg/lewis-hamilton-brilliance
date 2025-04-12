@@ -1,1 +1,0 @@
-SELECT 44 AS hamilton

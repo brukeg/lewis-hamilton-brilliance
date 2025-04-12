@@ -1,0 +1,31 @@
+version: 2
+
+sources:
+  - name: semi_processed
+    schema: semi_processed
+    tables:
+      - name: championship_points_gap
+      - name: driver_unique_gp_wins
+      - name: race_participation_counts
+      - name: driver_constructor_wins
+      - name: driver_achievement_summary
+      - name: driver_career_summary
+      - name: driver_championship_wins
+      - name: driver_circuit_performance
+      - name: driver_front_row_starts
+      - name: driver_pole_positions
+      - name: driver_win_rates
+      - name: driver_wins_by_country
+
+models:
+  - name: lewis_hamilton_championship_points_gap
+    description: "The points gap between first and second in Lewis Hamilton's championship seasons"
+
+  - name: lewis_hamilton_unique_gp_wins
+    description: "How many races has Lewis Hamilton won at least once? (Unique GP victories)"
+
+  - name: lewis_hamilton_total_races
+    description: "How many races has Lewis Hamilton competed in?"
+
+  - name: lewis_hamilton_constructor_wins
+    description: "Race wins for Lewis Hamilton by constructor (team)"

@@ -210,3 +210,7 @@ override.tf.json
 # Ignore CLI configuration files
 .terraformrc
 terraform.rc
+
+# dbt
+dbt/dbt_packages/
+dbt/dbt_packages/*

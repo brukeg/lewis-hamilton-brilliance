@@ -1,6 +1,4 @@
--- Question: Which continents or countries has he dominated most? (Wins by location)
--- Table: driver_wins_by_country.sql
--- Directory: models/semi_processed
+-- Total wins per driver in each country
 
 {{ config(materialized='table') }}
 

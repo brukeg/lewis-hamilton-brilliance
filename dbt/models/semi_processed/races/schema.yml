@@ -1,17 +1,11 @@
 version: 2
 
 models:
-  - name: championship_point_gaps
-    config:
-      schema: semi_processed
+  - name: championship_points_gap
     description: "Points gap between first and second place in each seasons?"
 
   - name: driver_unique_gp_wins
-    config:
-      schema: semi_processed
     description: "Number of unique Grands Prix each driver has won"
 
   - name: race_participation_counts
-    config:
-      schema: semi_processed
     description: "Number of races each driver has competed in"

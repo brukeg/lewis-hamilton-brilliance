@@ -4,7 +4,7 @@ models:
   - name: driver_achievement_summary
     config:
       schema: semi_processed
-    description: "Total number of races, wins, podiums, and pole positions"
+    description: "Total number of races, wins, podiums, and pole positions per driver"
 
   - name: driver_career_summary
     config:
