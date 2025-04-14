@@ -308,3 +308,5 @@ Example:
 ```bash
 python main.py run-pipeline
 ```
+
+![Alt text](charts.png)
