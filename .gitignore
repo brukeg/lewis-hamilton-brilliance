@@ -214,3 +214,4 @@ terraform.rc
 # dbt
 dbt/dbt_packages/
 dbt/dbt_packages/*
+lewis/
