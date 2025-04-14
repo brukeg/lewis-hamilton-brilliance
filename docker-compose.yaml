@@ -8,13 +8,11 @@ services:
     ports:
       - "8080:8080"
     volumes:
-      - ${GOOGLE_CREDENTIALS_HOST}:${GOOGLE_APPLICATION_CREDENTIALS}
-      - ${PWD}/docker/kestra/application.yaml:/app/config/application.yaml
-      - ${PWD}/dags:/app/dags
-    command: server standalone
+      - ${GOOGLE_CREDENTIALS_HOST}:${GOOGLE_APPLICATION_CREDENTIALS}  # Mount GCP credentials
+      - ./docker/kestra/application.yaml:/app/config/application.yaml  # Custom config
     environment:
       GOOGLE_APPLICATION_CREDENTIALS: ${GOOGLE_APPLICATION_CREDENTIALS}
-      KESTRA_CONFIGURATION_PATH: /app/config/application.yaml
+    command: server standalone
     networks:
       - lewis-hamilton
   kestra-cli:
@@ -33,81 +31,6 @@ services:
     networks:
       - lewis-hamilton
 
-    #     kestra-cli:
-    # image: kestra/kestra:latest
-    # platform: linux/arm64
-    # pull_policy: always
-    # container_name: kestra-cli
-    # entrypoint: ["/app/kestra"]
-    # command: server standalone
-    # volumes:
-    #   - ${PWD}:/workspace
-    #   - ${GOOGLE_CREDENTIALS_HOST}:${GOOGLE_APPLICATION_CREDENTIALS}
-    # environment:
-    #   GOOGLE_APPLICATION_CREDENTIALS: ${GOOGLE_APPLICATION_CREDENTIALS}
-    # networks:
-    #   - lewis-hamilton
-
-
-  spark:
-    build: ./docker/spark
-    container_name: spark
-    volumes:
-      - ${GOOGLE_CREDENTIALS_HOST}:${GOOGLE_APPLICATION_CREDENTIALS}
-    environment:
-      SPARK_MODE: master
-      GOOGLE_APPLICATION_CREDENTIALS: ${GOOGLE_APPLICATION_CREDENTIALS}
-    ports:
-      - "7077:7077"
-      - "8081:8081"
-    networks:
-      - lewis-hamilton
-
-  spark-worker-1:
-    build: ./docker/spark
-    container_name: spark-worker-1
-    volumes:
-      - ${GOOGLE_CREDENTIALS_HOST}:${GOOGLE_APPLICATION_CREDENTIALS}
-    environment:
-      SPARK_MODE: worker
-      SPARK_MASTER_URL: spark://spark:7077
-      GOOGLE_APPLICATION_CREDENTIALS: ${GOOGLE_APPLICATION_CREDENTIALS}
-      LD_PRELOAD: ""
-    depends_on:
-      - spark
-    networks:
-      - lewis-hamilton
-
-  spark-worker-2:
-    build: ./docker/spark
-    container_name: spark-worker-2
-    volumes:
-      - ${GOOGLE_CREDENTIALS_HOST}:${GOOGLE_APPLICATION_CREDENTIALS}
-    environment:
-      SPARK_MODE: worker
-      SPARK_MASTER_URL: spark://spark:7077
-      GOOGLE_APPLICATION_CREDENTIALS: ${GOOGLE_APPLICATION_CREDENTIALS}
-      LD_PRELOAD: ""
-    depends_on:
-      - spark
-    networks:
-      - lewis-hamilton
-
-  spark-worker-3:
-    build: ./docker/spark
-    container_name: spark-worker-3
-    volumes:
-      - ${GOOGLE_CREDENTIALS_HOST}:${GOOGLE_APPLICATION_CREDENTIALS}
-    environment:
-      SPARK_MODE: worker
-      SPARK_MASTER_URL: spark://spark:7077
-      GOOGLE_APPLICATION_CREDENTIALS: ${GOOGLE_APPLICATION_CREDENTIALS}
-      LD_PRELOAD: ""
-    depends_on:
-      - spark
-    networks:
-      - lewis-hamilton
-
   dbt:
     build: ./docker/dbt
     container_name: dbt
@@ -119,8 +42,6 @@ services:
       GOOGLE_APPLICATION_CREDENTIALS: ${GOOGLE_APPLICATION_CREDENTIALS}
     entrypoint: ["/bin/sh", "-c", "tail -f /dev/null"]
     working_dir: /app/dbt
-    depends_on:
-      - spark
     networks:
       - lewis-hamilton
 

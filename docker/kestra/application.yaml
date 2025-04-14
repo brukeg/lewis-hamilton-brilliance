@@ -19,3 +19,4 @@ kestra:
   server:
     flow:
       path: /app/dags/workflows
+    uiPath: /
