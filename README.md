@@ -113,3 +113,50 @@ The ingestion pipeline is responsible for downloading, extracting, and uploading
 3. **Uploading Data to GCS:**  
    - The `ingestion/upload_to_gcs.py` script handles recursively uploading the contents of the local raw data directory to a GCS bucket.
    - This ensures that only the latest data is persisted in the cloud.
+
+
+# Transformation
+
+The dbt transformation layer handles structuring the raw F1DB data into progressively cleaner, more analysis-friendly datasets. This is done using a Medallion Architecture: raw data lives in `dbt_staging`, `semi-processed` models are built into `semi_processed`, and final outputs used for analysis live in `final_processed`.
+
+## Overview
+1. **Raw Data Externalization and Materialization:**
+
+- The raw CSV files uploaded to GCS are exposed in dbt via the dbt_external_tables package.
+
+- Each CSV file is defined as an external table in `models/raw/external/` and linked in the sources: section of `raw/schema.yml`.
+
+- These external tables are then optionally materialized as native BigQuery tables in `models/raw/materialized/`, providing a stable interface for downstream transformations.
+
+2. **Semi-Processed Layer (Intermediate Models):**
+
+- The semi_processed/ directory is where general-purpose transformations live — such as per-driver aggregations, race-level summaries, or win stats by constructor.
+
+- Each model in this layer includes `{{ config(schema='semi_processed') }}` or is selectively enabled via the --target system using +enabled flags in dbt_project.yml.
+
+- This layer is built using standard dbt modeling best practices: incremental logic where needed, clear naming conventions, and a focus on wide usability across final models.
+
+3. **Final Transformed Layer (Analysis-Ready Models):**
+
+- Final models in `final_transformed/` are narrowly scoped for the specific analysis I'm doing on Lewis Hamilton’s career.
+
+- Instead of using `ref()` to pull from other dbt models (which would require all dependencies to be enabled at runtime), these models use `source()` to pull from pre-built tables in the semi_processed dataset.
+
+- This allows each layer (dev, semi, final) to be built independently, using different `--target` profiles that map to different BigQuery datasets.
+
+4. **Isolated Targets for Clear Boundaries:**
+
+- The profiles.yml file defines three separate targets:
+
+  - dev → writes to dbt_staging
+
+  - semi → writes to semi_processed
+
+  - final → writes to final_processed
+
+- Each directory in the dbt project is only enabled for the relevant target using +enabled: `"{{ target.name == 'X' }}"`, which ensures clean separation of concerns and reproducibility across transformation stages.
+
+
+# Orchestration
+
+## Overview

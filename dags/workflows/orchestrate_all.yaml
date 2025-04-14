@@ -1,0 +1,72 @@
+id: lewis-hamilton-full-pipeline
+namespace: lewis_hamilton_brilliance
+description: "Always ingests the latest data and runs all dbt transformations."
+
+tasks:
+  - id: list-latest-files
+    type: io.kestra.plugin.gcp.gcs.List
+    from: gs://compact-arc-447521-f9-data-lake/raw/latest/
+
+  - id: extract-uris
+    type: io.kestra.core.tasks.scripts.Bash
+    outputFiles:
+      - uris.json
+    commands:
+      - |
+        echo '{{ outputs["list-latest-files"] | json }}' > outputs.json
+        echo "Dumped outputs to outputs.json:"
+        cat outputs.json
+      - |
+        echo 'import json
+
+        try:
+            with open("outputs.json") as f:
+                content = f.read().strip()
+                if not content:
+                    raise ValueError("Empty output from list-latest-files")
+                data = json.loads(content)
+                blobs = data.get("blobs", [])
+                uris = [b["uri"] for b in blobs if b.get("uri", "").endswith(".csv")]
+            with open("uris.json", "w") as out:
+                json.dump(uris, out)
+            print("Extracted URIs:", uris)
+        except Exception as e:
+            print("Error:", e)
+            with open("uris.json", "w") as out:
+                json.dump([], out)' > extract_uris.py
+      - python3 extract_uris.py
+      - |
+        echo "Contents of working directory after Python script:"
+        ls -lh
+        echo "----"
+        echo "Contents of uris.json (if it exists):"
+        cat uris.json || echo "uris.json not found"
+
+  - id: download-files
+    type: io.kestra.plugin.core.flow.EachSequential
+    value: "{{ outputs['extract-uris']['uris.json'] | json }}"
+    tasks:
+      - id: download-file
+        type: io.kestra.plugin.gcp.gcs.Download
+        from: "{{ value }}"
+
+  - id: ingest-and-transform
+    type: io.kestra.core.tasks.scripts.Bash
+    runner: DOCKER
+    dockerOptions:
+      image: python:3.10-slim
+    inputFiles:
+      manage_raw_data.py: "{{ workingDir }}/ingestion/manage_raw_data.py"
+      dbt_project_dir: "{{ workingDir }}/dbt"
+    env:
+      GOOGLE_APPLICATION_CREDENTIALS: "{{ envs.GOOGLE_APPLICATION_CREDENTIALS }}"
+    commands:
+      - echo "Ingesting raw data"
+      - python3 manage_raw_data.py
+      - echo "Running dbt raw transformations"
+      - cd dbt_project_dir
+      - dbt run --target dev
+      - echo "Running dbt semi transformations"
+      - dbt run --target semi
+      - echo "Running dbt final transformations"
+      - dbt run --target final

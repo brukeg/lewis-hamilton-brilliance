@@ -12,65 +12,22 @@ services:
       - ./docker/kestra/application.yaml:/app/config/application.yaml  # Custom config
     environment:
       GOOGLE_APPLICATION_CREDENTIALS: ${GOOGLE_APPLICATION_CREDENTIALS}
+    command: server standalone
     networks:
       - lewis-hamilton
-
-  spark:
-    build: ./docker/spark
-    container_name: spark
+  kestra-cli:
+    image: kestra/kestra:latest
+    platform: linux/amd64
+    pull_policy: always
+    container_name: kestra-cli
+    entrypoint: ["/bin/sh", "-c"]
+    command: ["while true; do sleep 3600; done"]
     volumes:
+      # - ${PWD}/dags:/app/dags
+      - .:/workspace
       - ${GOOGLE_CREDENTIALS_HOST}:${GOOGLE_APPLICATION_CREDENTIALS}
     environment:
-      SPARK_MODE: master
       GOOGLE_APPLICATION_CREDENTIALS: ${GOOGLE_APPLICATION_CREDENTIALS}
-    ports:
-      - "7077:7077"
-      - "8081:8081"
-    networks:
-      - lewis-hamilton
-
-  spark-worker-1:
-    build: ./docker/spark
-    container_name: spark-worker-1
-    volumes:
-      - ${GOOGLE_CREDENTIALS_HOST}:${GOOGLE_APPLICATION_CREDENTIALS}
-    environment:
-      SPARK_MODE: worker
-      SPARK_MASTER_URL: spark://spark:7077
-      GOOGLE_APPLICATION_CREDENTIALS: ${GOOGLE_APPLICATION_CREDENTIALS}
-      LD_PRELOAD: ""
-    depends_on:
-      - spark
-    networks:
-      - lewis-hamilton
-
-  spark-worker-2:
-    build: ./docker/spark
-    container_name: spark-worker-2
-    volumes:
-      - ${GOOGLE_CREDENTIALS_HOST}:${GOOGLE_APPLICATION_CREDENTIALS}
-    environment:
-      SPARK_MODE: worker
-      SPARK_MASTER_URL: spark://spark:7077
-      GOOGLE_APPLICATION_CREDENTIALS: ${GOOGLE_APPLICATION_CREDENTIALS}
-      LD_PRELOAD: ""
-    depends_on:
-      - spark
-    networks:
-      - lewis-hamilton
-
-  spark-worker-3:
-    build: ./docker/spark
-    container_name: spark-worker-3
-    volumes:
-      - ${GOOGLE_CREDENTIALS_HOST}:${GOOGLE_APPLICATION_CREDENTIALS}
-    environment:
-      SPARK_MODE: worker
-      SPARK_MASTER_URL: spark://spark:7077
-      GOOGLE_APPLICATION_CREDENTIALS: ${GOOGLE_APPLICATION_CREDENTIALS}
-      LD_PRELOAD: ""
-    depends_on:
-      - spark
     networks:
       - lewis-hamilton
 
@@ -85,8 +42,6 @@ services:
       GOOGLE_APPLICATION_CREDENTIALS: ${GOOGLE_APPLICATION_CREDENTIALS}
     entrypoint: ["/bin/sh", "-c", "tail -f /dev/null"]
     working_dir: /app/dbt
-    depends_on:
-      - spark
     networks:
       - lewis-hamilton
 
