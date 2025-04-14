@@ -25,7 +25,114 @@ We’re not here just to admire the stats—we’re here to prove the brilliance
 
 1. Who are the all-time greats in terms of total wins, poles, and championships—and where does Lewis stand?
 
-We’ll be using GCP, Terraform, Kestra, BigQuery, dbt, and Looker to create a fully orchestrated pipeline that answers these questions at scale—and makes the case for Lewis Hamilton as the
+If you're following along we’ll be using GCP, Terraform, BigQuery, dbt, and Looker to create a fully orchestrated pipeline that answers these questions at scale—and makes the case for Lewis Hamilton as the
+
+# Running the Project End-to-End
+My project builds a data pipeline around Lewis Hamilton’s career using Terraform, GCP, dbt, and Looker and then orchestrated via Click.
+
+#### Prerequisites
+- Google Cloud Project with:
+   - Compute Engine virtual machine
+   - BigQuery enabled
+   - GCS bucket created (used as the raw data lake)
+   - Service Account JSON keys 
+      - BigQuery Admin, BigQuery Data Editor, BigQuery User, Compute Admin, Project IAM Admin, Storage Admin, Storage Object Admin
+
+- A `.env` file in the project root
+
+- Terraform installed (used to provision BigQuery datasets and GCS buckets)
+
+- A python virtual environment
+
+### Setp 0: Project setup
+This project assumes you can ssh into a remote machine at GCP, and that you in your remote environment you already have Terraform, Docker, an Anaconda3 installed. 
+
+- Open your terminal
+- Git clone the repo:
+   ```bash
+   git clone git@github.com:brukeg/lewis-hamilton-brilliance.git
+   ```
+- Change directory into the project:
+   ```bash
+   cd lewis-hamilton-brilliance/
+   ```
+- Create a python virutal environment:
+   ```bash
+   (base) you@de-zoomcamp:~/lewis-hamilton-brilliance$ python -m venv lewis
+   (base) you@de-zoomcamp:~/lewis-hamilton-brilliance$ source lewis/bin/activate
+   (lewis) (base) you@de-zoomcamp:~/lewis-hamilton-brilliance$ pip install -r requirements.txt
+   ```
+
+- Create a `.env` file at the project root:
+   ```bash
+   (lewis) (base) you@de-zoomcamp:~/lewis-hamilton-brilliance$ touch .env
+   ```
+
+- Now open your `.env` file in any editor and save these details:
+
+   ```
+   GOOGLE_CREDENTIALS_HOST=/path/to/your/gcp/service_account_keys.json
+   GOOGLE_APPLICATION_CREDENTIALS=/secrets/creds.json
+   F1DB_RELEASE_URL=https://github.com/f1db/f1db/releases/download/v2025.3.0/f1db-csv.zip
+   RAW_DATA_DIR=/app/data/raw
+   GCS_BUCKET=your-gcp-bucket-name-data-lake # details below
+   GCS_PREFIX=raw/latest
+   ```
+
+**NOTE:**
+You'll get the GCS_BUCKET value after you apply terraform changes below. 
+
+- Initiate Docker:
+   ```bash
+   (lewis) (base) you@de-zoomcamp:~/lewis-hamilton-brilliance$ docker compose up -d --build
+   ```
+
+### Step 1: Provision Infrastructure with Terraform
+From the root of the repo:
+
+```bash
+cd terraform
+terraform init
+terraform plan
+terraform apply
+```
+
+**This creates:**
+- A GCS bucket for the data lake. You can copy/paste the name of this bucket from the GCP console to your `.env` file GCS_BUCKET variable.
+- BigQuery datasets: dbt_staging, semi_processed, final_processed
+
+### Step 2: Ingest Raw Data
+From the project root you have two choies. Run the whole project at once or do it in stages/steps further detailed below:
+
+All in one go (ignore following steps):
+```bash
+python main.py run-pipeline
+```
+
+In stages: 
+```bash
+python cli.py ingest
+```
+
+This will:
+- Download the latest F1DB dataset
+- Extract all CSVs
+- Upload them to the GCS bucket in the raw/latest/ folder
+
+### Step 3: Transform with dbt
+Run transformations in three stages:
+
+```bash
+# Materialize external + raw tables
+python cli.py transform --target dev
+
+# Build intermediate tables
+python cli.py transform --target semi
+
+# Build final, filtered Lewis Hamilton–specific outputs
+python cli.py transform --target final
+```
+
 
 # project structure
 ```
@@ -157,6 +264,47 @@ The dbt transformation layer handles structuring the raw F1DB data into progress
 - Each directory in the dbt project is only enabled for the relevant target using +enabled: `"{{ target.name == 'X' }}"`, which ensures clean separation of concerns and reproducibility across transformation stages.
 
 
-# Orchestration
+# Click CLI
+The Click-based CLI makess running the projet a breeze by allowing for ingestion and transformation steps via easy-to-use terminal commands.
 
 ## Overview
+The CLI wraps the project’s core functionality into a simple interface. It’s implemented using Click, a Python library for building command-line tools. You can run each part of the pipeline from your terminal using subcommands like ingest and transform.
+
+Basic structure of a command:
+```bash
+python main.py <command> [OPTIONS]
+```
+
+## Commands
+### Ingest: 
+`python cli.py ingest`
+Downloads raw F1DB data, extracts files, and uploads them to GCS. Calls manage_raw_data.py which handles downloading the zip from GitHub, extracting contents, and pushing .csv files into the raw zone (`gs://<your-bucket>/raw/latest/`).
+
+Example:
+```bash
+python main.py ingest
+```
+
+### Transform: 
+`python cli.py transform --target [dev|semi|final]`
+Runs dbt transformations for a specific target stage (dev, semi, or final). Optionally, you can limit execution to specific models or tags using `--select`.
+```bash
+python main.py transform --target <TARGET> [--select <MODEL_OR_TAG>]
+```
+- `--target`: Required. The dbt target to run.
+- `--select`: Optional. Specify one or more dbt models or tags to run selectively.
+
+Example:
+```bash
+python main.py transform --target dev
+python main.py transform --target final --select +driver_standings
+```
+
+### Run pipeline: 
+`python main.py run-pipeline`
+Executes the full pipeline: runs the ingestion script and all dbt transformation stages (dev, semi, and final) in order.
+
+Example:
+```bash
+python main.py run-pipeline
+```
