@@ -37,8 +37,7 @@ def download_zip(url: str, destination: str) -> str:
     except requests.exceptions.RequestException as e:
         logging.error(f"Failed to download ZIP file: {e}")
         raise
-
-    # Final sanity check
+    
     if not os.path.exists(local_filename):
         raise FileNotFoundError(f"Expected file was not found after download: {local_filename}")
 

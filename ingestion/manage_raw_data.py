@@ -8,42 +8,16 @@ from typing import Optional
 from extract_data import download_zip, extract_zip
 from upload_to_gcs import upload_directory
 
-"""
-manage_raw_data.py
-
-Main script to manage the ingestion of raw F1DB data.
-
-This script:
-  - Downloads the ZIP file from a given URL.
-  - Extracts its contents.
-  - Parses the version from the URL.
-  - Compares the new version to the currently stored version in the local raw data directory.
-  - If the new version is different, it clears the raw data directory, updates the version file,
-    and uploads the new data to a GCS bucket.
-"""
-
 # Configure logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 
-def parse_args():
-    """
-    Parse command-line arguments or fall back to environment variables.
-
-    Returns:
-        argparse.Namespace: The parsed arguments.
-    """
-    parser = argparse.ArgumentParser(description="Ingest and manage raw F1DB data.")
-    parser.add_argument("--url", default=os.environ.get("F1DB_RELEASE_URL"), help="URL of the F1DB CSV ZIP file.")
-    parser.add_argument("--raw_dir", default=os.environ.get("RAW_DATA_DIR"), help="Local directory for raw data storage.")
-    parser.add_argument("--bucket", default=os.environ.get("GCS_BUCKET"), help="GCS bucket name for raw data.")
-    parser.add_argument("--gcs_prefix", default=os.environ.get("GCS_PREFIX"), help="GCS folder prefix (e.g., 'raw/latest').")
-    return parser.parse_args()
 
 def parse_version_from_url(url: str) -> Optional[str]:
     match = re.search(r'/v(\d{4}\.\d+\.\d+)', url)
     if match:
         return match.group(1)
     return None
+
 
 def get_current_version(raw_dir: str) -> Optional[str]:
     version_file = os.path.join(raw_dir, "version.txt")
@@ -52,10 +26,12 @@ def get_current_version(raw_dir: str) -> Optional[str]:
             return f.read().strip()
     return None
 
+
 def update_version_file(raw_dir: str, version: str) -> None:
     version_file = os.path.join(raw_dir, "version.txt")
     with open(version_file, "w") as f:
         f.write(version)
+
 
 def clear_directory(directory: str) -> None:
     for filename in os.listdir(directory):
@@ -65,18 +41,13 @@ def clear_directory(directory: str) -> None:
         elif os.path.isdir(file_path):
             shutil.rmtree(file_path)
 
+
 def manage_ingestion(url: str, local_raw_dir: str, bucket_name: str, gcs_raw_prefix: str) -> None:
     """
     Manage the entire ingestion process:
       - Download and extract the ZIP file.
       - Compare the version with the current version.
       - If the version is new, clear the raw directory, update it with new data, and upload to GCS.
-
-    Args:
-        url (str): URL of the F1DB CSV ZIP file.
-        local_raw_dir (str): Local directory for raw data.
-        bucket_name (str): GCS bucket name.
-        gcs_raw_prefix (str): GCS folder prefix (e.g., 'raw/latest').
     """
     os.makedirs(local_raw_dir, exist_ok=True)
 
@@ -126,13 +97,42 @@ def manage_ingestion(url: str, local_raw_dir: str, bucket_name: str, gcs_raw_pre
     upload_directory(bucket_name, local_raw_dir, gcs_raw_prefix)
     logging.info("Uploaded new raw data to GCS.")
 
-    # Final cleanup
+    # Clean up temporary directories.
     for directory in [download_dir, extract_dir, temp_move_dir]:
         shutil.rmtree(directory, ignore_errors=True)
 
+
+def run_ingestion(url: str = None, raw_dir: str = None, bucket: str = None, gcs_prefix: str = None) -> None:
+    """
+    API function to run ingestion.
+
+    If any parameters are not provided, they will default to environment variables.
+    This function is intended to be called from the CLI (via Click) or programmatically.
+    """
+    if url is None:
+        url = os.environ.get("F1DB_RELEASE_URL")
+    if raw_dir is None:
+        raw_dir = os.environ.get("RAW_DATA_DIR")
+    if bucket is None:
+        bucket = os.environ.get("GCS_BUCKET")
+    if gcs_prefix is None:
+        gcs_prefix = os.environ.get("GCS_PREFIX")
+    if not all([url, raw_dir, bucket, gcs_prefix]):
+        raise ValueError("Missing required parameters for ingestion. Please provide URL, RAW_DIR, GCS_BUCKET, and GCS_PREFIX.")
+
+    manage_ingestion(url, raw_dir, bucket, gcs_prefix)
+
+
 def main() -> None:
-    args = parse_args()
+    # Standalone CLI using argparse.
+    parser = argparse.ArgumentParser(description="Ingest and manage raw F1DB data.")
+    parser.add_argument("--url", default=os.environ.get("F1DB_RELEASE_URL"), help="URL of the F1DB CSV ZIP file.")
+    parser.add_argument("--raw_dir", default=os.environ.get("RAW_DATA_DIR"), help="Local directory for raw data storage.")
+    parser.add_argument("--bucket", default=os.environ.get("GCS_BUCKET"), help="GCS bucket name for raw data.")
+    parser.add_argument("--gcs_prefix", default=os.environ.get("GCS_PREFIX"), help="GCS folder prefix (e.g., 'raw/latest').")
+    args = parser.parse_args()
     manage_ingestion(args.url, args.raw_dir, args.bucket, args.gcs_prefix)
 
-if __name__ == "__main__":
+
+if __name__ == '__main__':
     main()
