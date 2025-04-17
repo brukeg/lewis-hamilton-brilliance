@@ -1,5 +1,5 @@
 # lewis-hamilton-brilliance
-Data Engineering Zoomcamp Capstone Project: The Brilliance of Lewis Hamilton in data
+Data Engineering Zoomcamp Capstone Project: The Brilliance of Lewis Hamilton in Data
 
 # Problem
 #### The Brilliance of Lewis Hamilton
@@ -7,34 +7,25 @@ Lewis Hamilton isn’t just a Formula 1 driver—he’s a once-in-a-generation a
 
 But the narrative around "the greatest of all time" in F1 is often subjective—tied up in eras, team dynamics, or fan loyalty. This project sets out to explore that question through data. Using the open [F1DB dataset](https://github.com/f1db/f1db), we’ll build a cloud-based data pipeline that ingests, transforms, and visualizes Hamilton’s career in context with the rest of the grid—past and present.
 
-We’re not here just to admire the stats—we’re here to prove the brilliance with data. Some of the questions we’ll explore:
+We’re not here just to admire the stats—we’re here to prove the brilliance with data. We'll answer questions like:
 
 1. How many races has Lewis Hamilton competed in—and how does his win rate compare to other drivers with long careers?
 
-1. How dominant has he been at certain circuits?
-
 1. How often has he started from pole or the front row?
-
-1. In how many seasons did he win the championship, and how large were the point gaps?
-
-1. How many unique Grands Prix has he won?
 
 1. How many wins did he earn for each manufacturer?
 
-1. Which countries or continents has he dominated most?
-
 1. Who are the all-time greats in terms of total wins, poles, and championships—and where does Lewis stand?
 
-If you're following along we’ll be using GCP, Terraform, BigQuery, dbt, and Looker to create a fully orchestrated pipeline that answers these questions at scale—and makes the case for Lewis Hamilton as the
 
 # Running the Project End-to-End
-My project builds a data pipeline around Lewis Hamilton’s career using Terraform, GCP, dbt, and Looker and then orchestrated via Click.
+If you're following along we’ll be using GCP, Terraform, BigQuery, dbt, and Looker to create an end-to-end pipeline that answers these questions and makes the case for Lewis Hamilton as the GOAT.
 
 #### Prerequisites
 - Google Cloud Project with:
    - Compute Engine virtual machine
-   - BigQuery enabled
-   - GCS bucket created (used as the raw data lake)
+   - BigQuery
+   - Cloud Storage
    - Service Account JSON keys 
       - BigQuery Admin, BigQuery Data Editor, BigQuery User, Compute Admin, Project IAM Admin, Storage Admin, Storage Object Admin
 
@@ -42,10 +33,10 @@ My project builds a data pipeline around Lewis Hamilton’s career using Terrafo
 
 - Terraform installed (used to provision BigQuery datasets and GCS buckets)
 
-- A python virtual environment
+- A python environment preferably Anaconda
 
 ### Setp 0: Project setup
-This project assumes you can ssh into a remote machine at GCP, and that you in your remote environment you already have Terraform, Docker, an Anaconda3 installed. 
+This project assumes you can ssh into a remote machine at GCP, and that you in your remote environment you already have Terraform, Docker, an Anaconda3 installed just like the environment setup in Data Engineering Zoomcamp. 
 
 - Open your terminal
 - Git clone the repo:
@@ -56,13 +47,22 @@ This project assumes you can ssh into a remote machine at GCP, and that you in y
    ```bash
    cd lewis-hamilton-brilliance/
    ```
-- Create a python virutal environment:
+- Ensure you have the python package, Click in your environment (it's included with Anaconda3)
    ```bash
-   (base) you@de-zoomcamp:~/lewis-hamilton-brilliance$ python -m venv lewis
-   (base) you@de-zoomcamp:~/lewis-hamilton-brilliance$ source lewis/bin/activate
-   (lewis) (base) you@de-zoomcamp:~/lewis-hamilton-brilliance$ pip install -r requirements.txt
+   (base) brukeg@de-zoomcamp:~/lewis-hamilton-brilliance$ pip show click
+      Name: click
+      Version: 8.1.8
+      Summary: Composable command line interface toolkit
+      Home-page:
+      Author:
+      Author-email:
+      License:
+      Location: /home/brukeg/anaconda3/lib/python3.12/site-packages
+      Requires:
+      Required-by: black, conda_index, cookiecutter, dask, distributed, faust, Flask, mycli, nltk, pgcli, pgspecial, streamlit
    ```
-
+If you don't have Click you may need to create and activate a virtual environment in the root project folder. After you do that you can run:
+   `pip install -r requirements.txt`
 - Create a `.env` file at the project root:
    ```bash
    (lewis) (base) you@de-zoomcamp:~/lewis-hamilton-brilliance$ touch .env
@@ -80,7 +80,9 @@ This project assumes you can ssh into a remote machine at GCP, and that you in y
    ```
 
 **NOTE:**
-You'll get the GCS_BUCKET value after you apply terraform changes below. 
+You'll get the GCS_BUCKET value after you do terraform apply changes below. 
+
+Update `GOOGLE_CREDENTIALS_HOST` with your service account json keys, and be sure to have these enabled (BigQuery Admin, BigQuery Data Editor, BigQuery User, Compute Admin, Project IAM Admin, Storage Admin, Storage Object Admin)
 
 - Initiate Docker:
    ```bash
@@ -101,104 +103,86 @@ terraform apply
 - A GCS bucket for the data lake. You can copy/paste the name of this bucket from the GCP console to your `.env` file GCS_BUCKET variable.
 - BigQuery datasets: dbt_staging, semi_processed, final_processed
 
+Verify these before moving on.
+
 ### Step 2: Ingest Raw Data
-From the project root you have two choies. Run the whole project at once or do it in stages/steps further detailed below:
 
-All in one go (ignore following steps):
+From the project root:
 ```bash
-python main.py run-pipeline
+python race_cli.py ingest
 ```
-
-In stages: 
-```bash
-python cli.py ingest
-```
-
 This will:
-- Download the latest F1DB dataset
-- Extract all CSVs
-- Upload them to the GCS bucket in the raw/latest/ folder
+   - Download the latest F1DB dataset
+   - Extract all CSVs
+   - Upload them to the GCS bucket in the raw/latest/ folder
+
+Ingest will detect if the version of the file in `F1DB_RELEASE_URL` is the same or older than the current version (if one), versions that are not new will not be ingested, however you can bypass this functionality and force the ingest to occur with the optional `-f` or `--force` commands.
+   ```bash
+   python race_cli.py ingest -f
+   ```
+
+   ```bash
+   python race_cli.py ingest -force
+   ```
 
 ### Step 3: Transform with dbt
-Run transformations in three stages:
 
+From the project root:
+```bash
+python race_cli.py transform run_pipeline
+```
+This runs the full full DBT pipeline and each of the three schemas: dev -> semi -> final.
+
+You can execute individual transformations steps as well:
 ```bash
 # Materialize external + raw tables
-python cli.py transform --target dev
+python race_cli.py transform --target dev
 
 # Build intermediate tables
-python cli.py transform --target semi
+python race_cli.py transform --target semi
 
 # Build final, filtered Lewis Hamilton–specific outputs
-python cli.py transform --target final
+python race_cli.py transform --target final
 ```
 
 
 # project structure
 ```
 lewis-hamilton-career-brilliance/
-│── .gitignore
-│── README.md
-│── docker-compose.yml          # Multi-container setup for Spark, Kestra, dbt, Terraform, etc.
-│── requirements.txt            # Python dependencies
+.
+├── dags/                        # Orchestration logic
+│   └── workflows/               # YAML-based Kestra workflow definitions
 │
-├── config/                     # TO-DO: Configuration files for various tools if need be
-│   ├── kestra/                # Kestra workflow configurations
-│   ├── dbt/                   # dbt profile and connection configurations
-│   ├── terraform/             # Terraform variable and provider configuration files
-│   ├── spark/                 # Spark configuration files (spark-env.sh, spark-defaults.conf)
-│   └── gcs/                   # GCS-related settings (if any)
+├── data/                        # Local data lake storage
+│   ├── raw/                     # Unzipped CSVs from latest F1DB release
+│   ├── processed/               # Semi-transformed intermediate data (e.g. dbt staging models)
+│   └── final/                   # Finalized data (e.g. dbt marts filtered for Lewis Hamilton)
 │
-├── data/                       # Local data storage (before uploading to GCS)
-│   ├── raw/                   # Extracted CSVs from the downloaded ZIP file
-│   ├── processed/             # Semi-processed files (maybe my staging layer)
-│   └── final/                 # Final, cleaned/filtered data (maybe my ready for analytics layer)
+├── dbt/                         # dbt project for modeling and transformation
+│   ├── dbt_packages/            # Folder for dbt package dependencies
+│   ├── logs/                    # dbt execution logs (useful for debugging and CI)
+│   ├── macros/                  # Custom Jinja/SQL macros used across dbt models
+│   ├── models/                  # dbt models (staging, marts, lewis_hamilton subfolders expected)
+│   └── target/                  # Compiled SQL and artifacts from dbt runs (excluded from version control)
 │
-├── dags/                       # Kestra workflow definitions (YAML files)
-│   ├── ingest_f1_data.yaml    # Workflow for downloading, unzipping, and uploading raw data
-│   ├── process_data.yaml      # Workflow for processing raw data (via Spark)
-│   └── transform_data.yaml    # Workflow for transforming data with dbt (and materializing raw data)
+├── docker/                      # Docker configuration files
+│   ├── dbt/                     # Dockerfile and setup for dbt container
+│   ├── ingestion/               # Dockerfile and setup for ingestion container
+│   ├── kestra/                  # Dockerfile for Kestra UI/engine container
+│   └── terraform/               # Dockerfile and setup for running Terraform in a container
 │
-├── terraform/                  # Terraform Infrastructure as Code (IaC)
-│   ├── main.tf                # GCP infra definitions (BigQuery datasets, GCS bucket, IAM policies)
-│   ├── variables.tf           # Variable definitions (gcp_project, service account emails, etc.)
-│   └── outputs.tf             # Output definitions for the created resources (maybe)
+├── ingestion/                   # Ingestion logic and CLI
+│   ├── main.py                  # Container-level CLI entrypoint to trigger ingestion logic
+│   ├── manage_raw_data.py       # Main ingestion workflow logic (version checking, uploading to GCS)
+│   ├── extract_data.py          # Downloads and extracts F1DB zip release
+│   └── upload_to_gcs.py         # Uploads local files to GCS under configured prefix
 │
-├── ingestion/                  # Ingestion scripts for raw data
-│   ├── extract_data.py        # Script to unzip and extract CSVs from the downloaded ZIP file
-│   ├── upload_to_gcs.py       # Script to upload raw data from local disk to GCS bucket
-│   └── spark_job.py           # Script to trigger Apache Spark batch processing
+├── terraform/                   # Infrastructure-as-code for GCP
+│   ├── main.tf                  # Defines storage, IAM, BigQuery datasets/tables
+│   ├── variables.tf             # Parameterized inputs (e.g., project ID, bucket name)
+│   └── outputs.tf               # (Optional) Outputs used across environments or workflows
 │
-├── dbt/                        # dbt project for transformation and modeling
-│   ├── models/                # dbt models
-│   │   ├── staging/           # Staging models (semi-processed data)
-│   │   ├── marts/             # Final transformation models for Looker or other BI tools
-│   │   └── lewis_hamilton/      # Business-specific transformations/filters on LH data
-│   ├── dbt_project.yml        # dbt project configuration file
-│   └── profiles.yml           # dbt profiles for connection configurations (mounted into container)
-│
-├── materializations/           # (Optional) Scripts to materialize raw data into BigQuery
-│   ├── materialize_raw.sql    # SQL script to create materialized views or tables from raw data in BigQuery
-│   └── materialize_raw.py     # (Optional) Python script alternative for materialization
-│
-├── looker/                     # Looker-related configurations (maybe: for documentation)
-│   ├── views/                 # Looker view definitions
-│   └── dashboards/            # Looker dashboard definitions
-│
-├── docker/                     # Docker-related configurations and Dockerfiles for services
-│   ├── Dockerfile             # Main container setup
-│   ├── spark/                 # Docker configs for Spark containers
-│   ├── kestra/                # Docker configs for Kestra container
-│   ├── dbt/                   # Docker configs for dbt container
-│   └── terraform/             # Docker configs for Terraform container
-│
-├── scripts/                    # Utility scripts (time permitting)
-│   ├── setup_env.sh           # Initializes environment variables
-│   └── deploy.sh              # Automates deployment (could trigger Terraform, etc.)
-│
-├── notebooks/                  # Jupyter notebooks for exploratory data analysis (time permitting, not yet)
-├── logs/                       # Log storage for debugging (would be excluded from version control) (time permitting, not yet)
-└── tests/                      # Testing frameworks for ETL and dbt models (time permitting, not yet)
+├── tests/                       # Unit and integration tests (for dbt, ingestion, etc.)
 ```
 
 # Ingestion
@@ -270,12 +254,13 @@ The Click-based CLI makess running the projet a breeze by allowing for ingestion
 ## Overview
 The CLI wraps the project’s core functionality into a simple interface. It’s implemented using Click, a Python library for building command-line tools. You can run each part of the pipeline from your terminal using subcommands like ingest and transform.
 
-Basic structure of a command:
+Basic structure of a Click command:
 ```bash
-python main.py <command> [OPTIONS]
+python race_cli.py <command> [OPTIONS]
 ```
 
 ## Commands
+
 ### Ingest: 
 `python cli.py ingest`
 Downloads raw F1DB data, extracts files, and uploads them to GCS. Calls manage_raw_data.py which handles downloading the zip from GitHub, extracting contents, and pushing .csv files into the raw zone (`gs://<your-bucket>/raw/latest/`).
@@ -285,30 +270,40 @@ Example:
 python main.py ingest
 ```
 
+Ingest will detect if the version of the file in `F1DB_RELEASE_URL` is the same or older than the current version (if one), versions that are not new will not be ingested, however you can bypass this functionality and force the ingest to occur with the optional `-f` or `--force` commands.
+   ```bash
+   python race_cli.py ingest -f
+   ```
+
+   ```bash
+   python race_cli.py ingest -force
+   ```
+
 ### Transform: 
-`python cli.py transform --target [dev|semi|final]`
+`python race_cli.py transform --target [dev|semi|final]`
 Runs dbt transformations for a specific target stage (dev, semi, or final). Optionally, you can limit execution to specific models or tags using `--select`.
 ```bash
-python main.py transform --target <TARGET> [--select <MODEL_OR_TAG>]
+python race_cli.py transform --target <TARGET> [--select <MODEL_OR_TAG>]
 ```
 - `--target`: Required. The dbt target to run.
 - `--select`: Optional. Specify one or more dbt models or tags to run selectively.
 
 Example:
 ```bash
-python main.py transform --target dev
-python main.py transform --target final --select +driver_standings
+python race_cli.py transform --target dev
+python race_cli.py transform --target final --select +driver_standings
 ```
 
 ### Run pipeline: 
-`python main.py run-pipeline`
+`python race_cli.py run-pipeline`
 Executes the full pipeline: runs the ingestion script and all dbt transformation stages (dev, semi, and final) in order.
 
 Example:
 ```bash
-python main.py run-pipeline
+python race_cli.py run-pipeline
 ```
-## Charts
+
+# Charts
 location: https://lookerstudio.google.com/u/0/reporting/02687b3a-ccf4-4618-bb55-02aa4f842524/page/MT0GF
 
 ![Alt text](charts.png)
