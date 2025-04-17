@@ -1,6 +1,7 @@
 # lewis-hamilton-brilliance
 Data Engineering Zoomcamp Capstone Project: The Brilliance of Lewis Hamilton in Data
 
+
 # Problem
 #### The Brilliance of Lewis Hamilton
 Lewis Hamilton isn’t just a Formula 1 driver—he’s a once-in-a-generation athlete whose dominance has redefined greatness in the sport. With seven world championships, a record-breaking number of wins, poles, and podiums, his career is a data-rich case study in sustained excellence.
@@ -35,7 +36,7 @@ If you're following along we’ll be using GCP, Terraform, BigQuery, dbt, and Lo
 
 - A python environment preferably Anaconda
 
-### Setp 0: Project setup
+### Step 0: Project setup
 This project assumes you can ssh into a remote machine at GCP, and that you in your remote environment you already have Terraform, Docker, and Anaconda3 installed just like the environment setup in the [2025 Data Engineering Zoomcamp](https://github.com/DataTalksClub/data-engineering-zoomcamp/blob/main/01-docker-terraform/README.md). 
 
 - Open your terminal
@@ -92,7 +93,7 @@ Update `GOOGLE_CREDENTIALS_HOST` with your service account json keys, and be sur
    You can double check that all the containers were built and running properly with `docker ps`
 
    ```bash
-   (base) brukeg@de-zoomcamp:~/lewis-hamilton-brilliance$ docker ps
+   (base) you@ssh-host:~/lewis-hamilton-brilliance$ docker ps
    CONTAINER ID   IMAGE                                 COMMAND                  CREATED         STATUS                            PORTS                                       NAMES
    1f5b620d4292   kestra/kestra:latest                  "/bin/sh -c 'while t…"   6 seconds ago   Up 4 seconds                                                                  kestra-cli
    209f340063e0   google/cloud-sdk:slim                 "/bin/sh -c 'gcloud …"   6 seconds ago   Up 4 seconds                                                                  gcloud
@@ -106,10 +107,13 @@ Update `GOOGLE_CREDENTIALS_HOST` with your service account json keys, and be sur
 From the root of the project change directory into `terraform/ ` then apply the resources.
 
    ```bash
-   cd terraform
-   terraform init
-   terraform plan
-   terraform apply
+   (base) you@ssh-host:~/lewis-hamilton-brilliance$ cd terraform/
+   (base) you@ssh-host:~/lewis-hamilton-brilliance/terraform$ terraform init
+   ...
+   (base) you@ssh-host:~/lewis-hamilton-brilliance/terraform$ terraform plan
+   ...
+   (base) you@ssh-host:~/lewis-hamilton-brilliance/terraform$ terraform apply
+   ...
    ```
 
 **This creates:**
@@ -119,7 +123,7 @@ From the root of the project change directory into `terraform/ ` then apply the 
 You can verify that these have been created from the Google Cloud Platform Console before moving on.
 
 ### Step 2: Ingest Raw Data
-If you're still in the `lewis-hamilton-brilliance/terraform/` directory then change back to the root with `cd` or `cd ..`. 
+If you're still in the `lewis-hamilton-brilliance/terraform/` directory then change back to the project root with `cd ..`. 
 
 From the project root:
    ```bash
