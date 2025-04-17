@@ -311,4 +311,4 @@ python main.py run-pipeline
 ## Charts
 location: https://lookerstudio.google.com/u/0/reporting/02687b3a-ccf4-4618-bb55-02aa4f842524/page/MT0GF
 
-![Alt text](lewis-charts.png)
+![Alt text](charts.png)
