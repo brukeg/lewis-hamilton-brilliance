@@ -8,15 +8,15 @@ from typing import Optional
 from extract_data import download_zip, extract_zip
 from upload_to_gcs import upload_directory
 
-# Configure logging
+
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 
 def parse_version_from_url(url: str) -> Optional[str]:
     """
-    Extract the version string from the given URL.
+    Extract the version string from the release URL.
 
     Args:
-        url (str): The URL from which to extract the version.
+        url (str): The F1DB URL in .env
 
     Returns:
         Optional[str]: The version string (e.g., '2025.3.0') if matched, else None.
@@ -28,10 +28,10 @@ def parse_version_from_url(url: str) -> Optional[str]:
 
 def get_current_version(raw_dir: str) -> Optional[str]:
     """
-    Read the current version stored in the version.txt file in the given directory.
+    Reads the current version stored in the version.txt file in the given directory.
 
     Args:
-        raw_dir (str): Path to the directory containing version.txt.
+        raw_dir (str): Path to the directory containing version.txt (data/raw/version.txt).
 
     Returns:
         Optional[str]: The current version string if available, else None.
@@ -44,10 +44,10 @@ def get_current_version(raw_dir: str) -> Optional[str]:
 
 def update_version_file(raw_dir: str, version: str) -> None:
     """
-    Update the version.txt file with the new version string.
+    Updates the version.txt file with the new version string.
 
     Args:
-        raw_dir (str): Path to the directory where version.txt resides.
+        raw_dir (str): Path to the directory (data/raw/version.txt).
         version (str): New version string to write.
     """
     version_file = os.path.join(raw_dir, "version.txt")
@@ -139,10 +139,10 @@ def run_ingestion(url: str = None, raw_dir: str = None, bucket: str = None, gcs_
     Run ingestion with either environment variable or passed parameters.
 
     Args:
-        url (str, optional): Download URL.
-        raw_dir (str, optional): Local storage path.
-        bucket (str, optional): GCS bucket name.
-        gcs_prefix (str, optional): GCS prefix path.
+        url (str): F1DB Download URL.
+        raw_dir (str): Local storage path.
+        bucket (str): GCS bucket name.
+        gcs_prefix (str): GCS prefix path.
         force (bool, optional): Bypass version check and ingest anyway.
 
     Raises:
@@ -167,7 +167,7 @@ def main() -> None:
     """
     parser = argparse.ArgumentParser(description="Ingest and manage raw F1DB data.")
     parser.add_argument("--url", default=os.environ.get("F1DB_RELEASE_URL"), help="URL of the F1DB CSV ZIP file.")
-    parser.add_argument("--raw_dir", default=os.environ.get("RAW_DATA_DIR"), help="Local directory for raw data storage.")
+    parser.add_argument("--raw_dir", default=os.environ.get("RAW_DATA_DIR"), help="Local directory for raw data storage (e.g., 'data/raw').")
     parser.add_argument("--bucket", default=os.environ.get("GCS_BUCKET"), help="GCS bucket name for raw data.")
     parser.add_argument("--gcs_prefix", default=os.environ.get("GCS_PREFIX"), help="GCS folder prefix (e.g., 'raw/latest').")
     parser.add_argument("--force", action="store_true", help="Force ingestion regardless of current version.")

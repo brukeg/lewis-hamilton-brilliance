@@ -8,7 +8,7 @@ def cli():
     """
     Host CLI for running ingestion and DBT transformation tasks.
 
-    This CLI tool delegates commands to the appropriate Docker containers
+    Race CLI delegates commands to the appropriate Docker containers
     using "docker exec". It is designed to be run from your host machine, which
     must have Docker installed and running. Use this interface to trigger either
     the ingestion process (via the ingestion container) or transformation tasks
@@ -25,7 +25,7 @@ def cli():
 @click.pass_context
 def ingest(ctx, force):
     """
-    Run the full ingestion process via the ingestion container.
+    Runs the full ingestion process via the ingestion container.
 
     This command triggers the ingestion workflow by running
     the ingestion container's main.py script with the "ingest"
@@ -42,8 +42,6 @@ def ingest(ctx, force):
             "python", "/app/ingestion/main.py", "ingest"
         ]
 
-        # Add --force only if the flag was explicitly passed via Click,
-        # and not redundantly already in ctx.args
         if force and "--force" not in ctx.args and "-f" not in ctx.args:
             cmd.append("--force")
 
@@ -66,9 +64,9 @@ def ingest(ctx, force):
 @cli.group()
 def transform():
     """
-    Group of DBT transformation commands. Use one of the subcommands:
-    run         Run DBT models for a specific target.
-    run_pipeline    Execute the full pipeline across dev, semi, and final targets sequentially.
+    Group of DBT transformation commands. Use one of the subcommands:\n
+        run: Run DBT models for a specific target.\n
+        run_pipeline: Execute the full pipeline across dev, semi, and final targets sequentially.
     """
     pass
 
@@ -79,7 +77,7 @@ def transform():
               help="Select a specific model or tag to run. Examples: 'my_model', '+tag_name'.")
 def run(target, select):
     """
-    Run DBT transformations for a single target.
+    Runs DBT transformations for a single target.
     """
     try:
         click.echo("Starting transformation process on host...")
@@ -104,7 +102,7 @@ def run(target, select):
 @transform.command(name='run_pipeline')
 def run_pipeline():
     """
-    Execute the full DBT pipeline: dev -> semi -> final.
+    Executes the full DBT pipeline: dev -> semi -> final.
     This runs `dbt run` sequentially for each of the three targets.
     """
     targets = ['dev', 'semi', 'final']

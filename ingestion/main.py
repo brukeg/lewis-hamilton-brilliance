@@ -33,16 +33,17 @@ def ingest(force):
       - Extracts its contents.
       - Compares the extracted version with the local version.
       - If the version is new (or if --force is passed):
-            * Clears the raw data directory.
-            * Moves new files into place.
+            * Removes and recreates temporary staging directories.
+            * Downloads and extracts new files.
+            * Moves new data into the raw directory (overwriting existing files).
             * Updates the version file.
-            * Uploads the data to the configured GCS bucket.
-            * Cleans up all temporary directories.
+            * Uploads to GCS and cleans up temporary dirs.
 
     If no new version is detected and --force is not specified, the command exits early.
 
-    Example:
+    Examples:
         python main.py ingest
+        python main.py ingest -f
         python main.py ingest --force
     """
     try:
