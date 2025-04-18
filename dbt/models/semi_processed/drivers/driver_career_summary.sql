@@ -1,6 +1,7 @@
--- Question: Who are the all-time greatest based on championships, race wins, and poles?
-
-{{ config(materialized='table') }}
+{{ config(
+  materialized='table',
+  cluster_by=["driver_id"]
+) }}
 
 WITH championships AS (
   SELECT

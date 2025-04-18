@@ -1,6 +1,7 @@
--- Total wins per driver in each country
-
-{{ config(materialized='table') }}
+{{ config(
+  materialized='table',
+  cluster_by=["driver_id"]
+) }}
 
 SELECT
   rr.driverId AS driver_id,

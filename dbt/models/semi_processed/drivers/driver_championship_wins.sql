@@ -1,6 +1,7 @@
--- Question: Championships won per driver?
-
-{{ config(materialized='table') }}
+{{ config(
+  materialized='table',
+  cluster_by=["driver_id"]
+) }}
 
 SELECT
   driverId AS driver_id,

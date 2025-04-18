@@ -18,7 +18,8 @@
             length FLOAT64,
             turns INT64,
             totalRacesHeld INT64
-         "
+         ",
+         "cluster_by": ["id"]
     }
 ) }}
 

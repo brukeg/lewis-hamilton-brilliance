@@ -1,4 +1,7 @@
-{{ config(materialized='table') }}
+{{ config(
+  materialized='table',
+  cluster_by=["season", "champion_id", "runner_up_id"]
+) }}
 
 WITH ranked_standings AS (
   SELECT
