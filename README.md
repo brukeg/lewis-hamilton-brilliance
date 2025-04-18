@@ -109,6 +109,17 @@ Update `GOOGLE_CREDENTIALS_HOST` with your service account json keys, and be sur
    555fbb51483b   lewis-hamilton-brilliance-ingestion   "/bin/sh -c 'tail -f…"   6 seconds ago   Up 4 seconds                                                                  ingestion
    ```
 
+Before you can run Terraform you have to tell it where to look for you service account keys. The `terraform/variable.tf` has a variable "credentials" that we will export. By now you have saved your service account keys in a `.env` file in the project root with `GOOGLE_CREDENTIALS_HOST` 
+
+So from the command line:
+
+   ```bash 
+   you@ssh-host:~/lewis-hamilton-brilliance$ export $(grep GOOGLE_CREDENTIALS_HOST .env)
+   you@ssh-host:~/lewis-hamilton-brilliance$ export TF_VAR_credentials=$GOOGLE_CREDENTIALS_HOST
+   ```
+
+That should do it for set up!
+
 ### Step 1: Provision Infrastructure with Terraform
 From the root of the project change directory into `terraform/ ` then apply the resources.
 
@@ -152,13 +163,13 @@ This runs the full full DBT pipeline and each of the three schemas: dev -> semi 
 You can execute individual transformations steps as well:
 ```bash
 # Materialize external + raw tables
-python race_cli.py transform --target dev
+python race_cli.py transform run --target dev
 
 # Build intermediate tables
-python race_cli.py transform --target semi
+python race_cli.py transform run --target semi
 
 # Build final, filtered Lewis Hamilton–specific tables
-python race_cli.py transform --target final
+python race_cli.py transform run --target final
 ```
 
 
@@ -296,18 +307,18 @@ The Ingest command will detect if the version of the file in `F1DB_RELEASE_URL` 
    ```
 
 ### Transform: 
-`python race_cli.py transform --target [dev|semi|final]`
+`python race_cli.py transform --target run [dev|semi|final]`
 Runs dbt transformations for a specific target stage (dev, semi, or final). Optionally, you can limit execution to specific models or tags using `--select`.
    ```bash
-   python race_cli.py transform --target <TARGET> [--select <MODEL_OR_TAG>]
+   python race_cli.py transform run --target <TARGET> [--select <MODEL_OR_TAG>]
    ```
    - `--target`: Required. The dbt target to run.
    - `--select`: Optional. Specify one or more dbt models or tags to run selectively.
 
 Examples:
    ```bash
-   python race_cli.py transform --target dev
-   python race_cli.py transform --target final --select +driver_standings
+   python race_cli.py transform run --target dev
+   python race_cli.py transform run --target final --select +driver_standings
    ```
 
 #### Run pipeline: 

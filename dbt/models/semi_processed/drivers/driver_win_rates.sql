@@ -1,6 +1,7 @@
--- Win rate for drivers who have competed in at least 100 races
-
-{{ config(materialized='table') }}
+{{ config(
+  materialized='table',
+  cluster_by=["driver_id"]
+) }}
 
 WITH race_counts AS (
   SELECT

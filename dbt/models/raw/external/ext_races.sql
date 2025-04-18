@@ -48,7 +48,9 @@
             warmingUpDate DATE,
             warmingUpTime STRING
          ",
-         "partition_by": "date"
+         "partition_by": "date",
+         "cluster_by": ["id", "circuitId"]
+
     }
 ) }}
 
