@@ -18,6 +18,12 @@ We’re not here just to admire the stats—we’re here to prove the brilliance
 
 1. Who are the all-time greats in terms of total wins, poles, and championships—and where does Lewis stand?
 
+1. How dominant has he been at certain circuits?
+
+1. Which countries or continents has he dominated most?
+
+1. In how many seasons did he win the championship, and how large were the point gaps?
+
 
 # Running the Project End-to-End
 If you're following along we’ll be using GCP, Terraform, BigQuery, dbt, and Looker to create an end-to-end pipeline that answers these questions and makes the case for Lewis Hamilton as the GOAT.
