@@ -1,6 +1,7 @@
 # lewis-hamilton-brilliance
 Data Engineering Zoomcamp Capstone Project: The Brilliance of Lewis Hamilton in Data
 
+[Have a look at the charts below](https://github.com/brukeg/lewis-hamilton-brilliance?tab=readme-ov-file#charts)
 
 # Problem
 #### The Brilliance of Lewis Hamilton
@@ -87,7 +88,7 @@ If you don't have Click you may need to create and activate a virtual environmen
    ```
 
 **NOTE:**
-You'll get the GCS_BUCKET value after you do `terraform apply` below. 
+You'll get the `GCS_BUCKET` value after you do `terraform apply` below. 
 
 Update `GOOGLE_CREDENTIALS_HOST` with your service account json keys, and be sure to have these enabled (BigQuery Admin, BigQuery Data Editor, BigQuery User, Compute Admin, Project IAM Admin, Storage Admin, Storage Object Admin). `GOOGLE_APPLICATION_CREDENTIALS`, `F1DB_RELEASE_URL`, `RAW_DATA_DIR`, and `GCS_PREFIX` all stay as they are.
 
@@ -135,7 +136,7 @@ From the root of the project change directory into `terraform/ ` then apply the 
 
 **This creates:**
 - A GCS bucket for the data lake. You can copy/paste the name of this bucket from the GCP console to your `.env` file `GCS_BUCKET` variable.
-- BigQuery datasets: dbt_staging, semi_processed, final_transformed
+- BigQuery datasets: semi_processed, final_transformed
 
 You can verify that these have been created from the Google Cloud Platform Console before moving on.
 
@@ -158,7 +159,7 @@ From the project root:
 ```bash
 python race_cli.py transform run_pipeline
 ```
-This runs the full full DBT pipeline and each of the three schemas: dev -> semi -> final.
+This runs the full DBT pipeline and each of the three schemas: dev -> semi -> final.
 
 You can execute individual transformations steps as well:
 ```bash
